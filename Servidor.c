@@ -96,8 +96,7 @@ int main(int argc, char *argv[])
 			if (row[0] == NULL){
 				printf("No hay datos\n");
 			}
-			else
-				username = atoi(row[0]); //error de igualar char a entero
+			
 		}
 			
 		else if (codigo ==2){ //¿En qué partidas ha participado el "Playertwo"?
@@ -129,7 +128,7 @@ int PartidasPlayerTwo(char username[20]){
 	char jugador[20],consulta[150];
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
-	conn=mysql_int(NULL);
+	conn=mysql_init(NULL);
 	if(conn==NULL){
 		printf("Error al crear la conexión\n");
 		exit(1);}
@@ -159,7 +158,7 @@ int Estadio(char stadio[20]){
 	char consulta[150];
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
-	conn=mysql_int(NULL);
+	conn=mysql_init(NULL);
 	if(conn==NULL){
 		printf("Error al crear la conexión\n");
 		exit(1);}
@@ -189,7 +188,7 @@ int estadio(char stadio[20]){
 	char consulta[150];
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
-	conn=mysql_int(NULL);
+	conn=mysql_init(NULL);
 	if(conn==NULL){
 		printf("Error al crear la conexión\n");
 		exit(1);}
