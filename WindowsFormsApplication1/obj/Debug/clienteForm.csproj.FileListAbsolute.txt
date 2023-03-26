@@ -115,3 +115,12 @@ C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\v1\clienteEjercicioGui
 C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\v1\clienteEjercicioGuia\WindowsFormsApplication1\obj\Debug\clienteForm.csproj.CoreCompileInputs.cache
 C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\v1\clienteEjercicioGuia\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\v1\clienteEjercicioGuia\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\obj\Debug\clienteForm.csproj.AssemblyReference.cache
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\obj\Debug\clienteForm.csproj.GenerateResource.cache
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\obj\Debug\clienteForm.csproj.CoreCompileInputs.cache
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\Toni Vidal Pañella\Documents\2n Quadrimestre\SO\ProyectoSO\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb

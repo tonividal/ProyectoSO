@@ -39,13 +39,13 @@ namespace WindowsFormsApplication1
             {
                 server.Connect(ipep);//Intentamos conectar el socket
                 this.BackColor = Color.Green;
-                MessageBox.Show("Conectado");
+                MessageBox.Show("Connectat");
 
             }
             catch (SocketException ex)
             {
                 //Si hay excepcion imprimimos error y salimos del programa con return 
-                MessageBox.Show("No he podido conectar con el servidor");
+                MessageBox.Show("No s'ha pogut establir connexió amb el servidor");
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace WindowsFormsApplication1
             mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
 
             if (mensaje == "SI")
-                MessageBox.Show("Ok");
+                MessageBox.Show("Ok, has entrat");
             else
                 MessageBox.Show("credencials incorrectes.");
 
