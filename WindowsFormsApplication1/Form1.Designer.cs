@@ -238,14 +238,16 @@
             // 
             this.password.Location = new System.Drawing.Point(168, 91);
             this.password.Name = "password";
+            this.password.PasswordChar = '·';
             this.password.Size = new System.Drawing.Size(152, 22);
             this.password.TabIndex = 1;
             // 
             // user
             // 
+            this.user.Font = new System.Drawing.Font("Cascadia Code", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.user.Location = new System.Drawing.Point(126, 36);
             this.user.Name = "user";
-            this.user.Size = new System.Drawing.Size(195, 22);
+            this.user.Size = new System.Drawing.Size(195, 27);
             this.user.TabIndex = 0;
             // 
             // Form1

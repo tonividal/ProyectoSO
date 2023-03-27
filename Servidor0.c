@@ -25,13 +25,16 @@ int main(int argc, char *argv[])
 	//htonl formatea el numero que recibe al formato necesario
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 	// escucharemos en el port 9050
-	serv_adr.sin_port = htons(9040);
+	serv_adr.sin_port = htons(9060);
 	if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
 		printf ("Error al bind");
 	//La cola de peticiones pendientes no podr? ser superior a 4
 	if (listen(sock_listen, 4) < 0)
 		printf("Error en el Listen");
 	int i;
+	int terminar=0;
+	char username[20];
+	char password[20], stadio[20];
 	// Atenderemos solo 10 peticione
 	for(i=0;i<10;i++){
 		printf ("Escuchando\n");
@@ -39,6 +42,8 @@ int main(int argc, char *argv[])
 		sock_conn = accept(sock_listen, NULL, NULL);
 		printf ("He recibido conexion\n");
 		//sock_conn es el socket que usaremos para este cliente
+		while(!terminar){
+			
 		
 		// Ahora recibimos su peticion
 		ret=read(sock_conn,peticion, sizeof(peticion));
@@ -46,16 +51,14 @@ int main(int argc, char *argv[])
 		// Tenemos que a?adirle la marca de fin de string 
 		// para que no escriba lo que hay despues en el buffer
 		peticion[ret]='\0';
-	
-
+		
+		MYSQL *conn;
 		//Escribimos la peticion en la consola
 		
 		printf("La peticion es: %s\n",peticion);
 		char *p = strtok(peticion, "/");
 		int codigo =  atoi (p);
 		p = strtok( NULL, "/");
-		char username[20];
-		char password[20], stadio[20];
 		strcpy (username, p);
 		printf ("Codigo: %d, username: %s, password: %s\n", codigo, username, password);
 		
@@ -63,7 +66,7 @@ int main(int argc, char *argv[])
 			p = strtok (NULL, "/");
 			strcpy(password, p);
 			printf ("Codigo: %d, Username: %s, password: %s\n", codigo, username, password);
-			MYSQL *conn;
+		
 			int err;
 			char consulta[100];
 			MYSQL_RES *resultado;
@@ -98,7 +101,6 @@ int main(int argc, char *argv[])
 				printf("No hay datos\n");
 				strcpy(respuesta1, "NO");
 			}
-<<<<<<< HEAD:Servidor0.c
 			else
 			{	
 				strcpy(respuesta1, "SI");
@@ -107,11 +109,8 @@ int main(int argc, char *argv[])
 			
 		
 			write (sock_conn, respuesta1, strlen(respuesta1));
-			
 			mysql_close (conn);
 			
-=======
->>>>>>> a6eee7b0beffed23b06a7af5e3868fed81d5c2ee:Servidor.c
 			
 		}
 			
@@ -135,42 +134,35 @@ int main(int argc, char *argv[])
 			
 			
 		}
+		}
+		
 	}
 }
 
-int PartidasPlayerTwo(char username[20]){
-	MYSQL *conn;
+int PartidasPlayerTwo(char username[20], MYSQL *connval){
+	
 	int err;
 	int partida_id;
-	char jugador[20],consulta[150];
+	char consulta[150];
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
-	conn=mysql_init(NULL);
-	if(conn==NULL){
-		printf("Error al crear la conexión\n");
-		exit(1);}
 	
-	conn=mysql_real_connect(conn,"localhost","root","mysql","game",0,NULL,0);
-	if(conn==NULL){
-		printf("Error al conectar\n");
-		exit(1);}
-	
+
 	//aleix
 	printf("Dame el jugador\n");
-	scanf("%s",jugador);
-	sprintf(consulta,"SELECT PARTIDA.ID FROM(JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.ID='%d' AND JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PARTIDA.ID=PUNTUACIONES.PARTIDA_ID",jugador);
-	
+	sprintf(consulta,"SELECT PARTIDA.ID FROM(JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.USERNAME='%s' AND JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PARTIDA.ID=PUNTUACIONES.PARTIDA_ID;",username);
+	printf(consulta);
 	//toni
 	//strcpy (consulta, "SELECT PARTIDA.ID FROM(JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.ID='AND JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PARTIDA.ID=PUNTUACIONES.PARTIDA_ID");
 	//strcat (consulta, username);
 	//strcat (consulta, "'");
 	
-	err=mysql_query(conn, consulta);
+	err=mysql_query(connval, consulta);
 	if(err!=0){
 		printf("Error en la consulta\n");
-		mysql_errno(conn), mysql_error(conn);
+		mysql_errno(connval), mysql_error(connval);
 		exit(1);}
-	resultado=mysql_store_result(conn);
+	resultado=mysql_store_result(connval);
 	row = mysql_fetch_row (resultado);
 	
 	// cerrar la conexion con el servidor MYSQL 
@@ -179,66 +171,40 @@ int PartidasPlayerTwo(char username[20]){
 	else
 		return atoi(row[0]);
 	
-	mysql_close (conn);
-	exit(0);
-	
 }
 
-int Estadio(char stadio[20]){
-	MYSQL *conn;
+int Estadio(char stadio[20], MYSQL * conn){
+	
 	int err;
 	int id_jugador;
 	char consulta[150];
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
-	conn=mysql_init(NULL);
-	if(conn==NULL){
-		printf("Error al crear la conexión\n");
-		exit(1);}
-	conn=mysql_real_connect(conn,"localhost","root","mysql","game",0,NULL,0);
-	if(conn==NULL){
-		printf("Error al conectar\n");
-		exit(1);}
+	
 	printf("Dame el estadio\n");
-	scanf("%s",stadio);
-	sprintf(consulta,"SELECT JUGADOR.ID FROM(JUGADOR, PARTIDA) WHERE PARTIDA.STADIO='%s'",stadio);
+	sprintf(consulta,"SELECT JUGADOR.ID FROM(JUGADOR, PARTIDA) WHERE PARTIDA.STADIO='%s';",stadio);
 	err=mysql_query(conn, consulta);
 	if(err!=0){
 		printf("Error en la consulta\n");
 		exit(1);}
 	resultado=mysql_store_result(conn);
 	
-	// cerrar la conexion con el servidor MYSQL 
-	mysql_close (conn);
-	exit(0);
 	
 }
 
-int estadio(char stadio[20]){
-	MYSQL *conn;
+int estadio(char stadio[20], MYSQL * conn){
+	
 	int err;
 	int jugador_id;
 	char consulta[150];
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
-	conn=mysql_init(NULL);
-	if(conn==NULL){
-		printf("Error al crear la conexión\n");
-		exit(1);}
-	conn=mysql_real_connect(conn,"localhost","root","mysql","game",0,NULL,0);
-	if(conn==NULL){
-		printf("Error al conectar\n");
-		exit(1);}
 	
-	err=mysql_query(conn, "SELECT JUGADOR.USERNAME, PARTIDA.STADIO FROM (JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PUNTUACIONES.PARTIDA_ID=PARTIDA.ID AND PUNTUACIONES.GOLS >=2");
+	err=mysql_query(conn, "SELECT JUGADOR.USERNAME, PARTIDA.STADIO FROM (JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PUNTUACIONES.PARTIDA_ID=PARTIDA.ID AND PUNTUACIONES.GOLS >=2;");
 	if (err!=0) {
 		printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
 		exit (1);
 	}
 	resultado=mysql_store_result(conn);
-	
-	// cerrar la conexion con el servidor MYSQL 
-	mysql_close (conn);
-	exit(0);
 	
 }

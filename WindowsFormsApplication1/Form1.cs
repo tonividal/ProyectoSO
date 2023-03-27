@@ -94,6 +94,7 @@ namespace WindowsFormsApplication1
                 // Enviamos al servidor el nombre tecleado
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
+                MessageBox.Show(mensaje);
 
                 //Recibimos la respuesta del servidor
                 byte[] msg2 = new byte[80];
