@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	//htonl formatea el numero que recibe al formato necesario
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 	// escucharemos en el port 9050
-	serv_adr.sin_port = htons(9060);
+	serv_adr.sin_port = htons(9050);
 	if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
 		printf ("Error al bind");
 	//La cola de peticiones pendientes no podr? ser superior a 4
@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
 		int codigo =  atoi (p);
 		p = strtok( NULL, "/");
 		strcpy (username, p);
-		printf ("Codigo: %d, username: %s, password: %s\n", codigo, username, password);
 		
 		if (codigo ==1) { //El usuario pide loguearse.
 			p = strtok (NULL, "/");
@@ -68,7 +67,7 @@ int main(int argc, char *argv[])
 			printf ("Codigo: %d, Username: %s, password: %s\n", codigo, username, password);
 		
 			int err;
-			char consulta[100];
+			char consulta[2048];
 			MYSQL_RES *resultado;
 			MYSQL_ROW row;
 
@@ -108,15 +107,14 @@ int main(int argc, char *argv[])
 			}
 			
 		
-			write (sock_conn, respuesta1, strlen(respuesta1));
-			mysql_close (conn);
-			
+			write (sock_conn, respuesta1, strlen(respuesta1));			
 			
 		}
 			
 		else if (codigo ==3){ //¿En qué partidas ha participado el "Playertwo"?
 			printf("Codigo: %d, Username: %s\n", codigo, username);
-			sprintf(respuesta,"%d", PartidasPlayerTwo(username));
+			int resu = PartidasPlayerTwo(username, conn); //provar de borrar el bin
+			sprintf(respuesta,"%d", resu);
 			write(sock_conn, respuesta, strlen(respuesta));
 		}
 		
@@ -124,60 +122,62 @@ int main(int argc, char *argv[])
 			p = strtok (NULL, "/");
 			strcpy(stadio, p);
 			printf ("Codigo: %d, Estadio: %s\n", codigo, stadio);
-			sprintf (respuesta,"%c", Estadio(stadio));
+			sprintf (respuesta,"%c", estadio(stadio, conn));
 			write (sock_conn, respuesta, strlen(respuesta));
 		}
 		
 		else if (codigo ==5){ //¿Dime qué jugadores han marcado dos o más goles y en qué estadio lo han hecho?
-			sprintf (respuesta,"%c","%c%", Estadio(stadio));
+			sprintf (respuesta,"%c","%c%", JugadoresEnEstadio(stadio, conn));
 			write (sock_conn, respuesta, strlen(respuesta));
-			
-			
 		}
+		
 		}
 		
 	}
 }
-
-int PartidasPlayerTwo(char username[20], MYSQL *connval){
-	
+//conval toma el valor de con cuando llama a la funcion
+int PartidasPlayerTwo(char username[20], MYSQL *connval, int* resultados, int max_resultados) {
 	int err;
-	int partida_id;
-	char consulta[150];
-	MYSQL_RES*resultado;
+	char consulta[2048];
+	MYSQL_RES* resultado;
 	MYSQL_ROW row;
 	
-
-	//aleix
 	printf("Dame el jugador\n");
-	sprintf(consulta,"SELECT PARTIDA.ID FROM(JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.USERNAME='%s' AND JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PARTIDA.ID=PUNTUACIONES.PARTIDA_ID;",username);
-	printf(consulta);
-	//toni
-	//strcpy (consulta, "SELECT PARTIDA.ID FROM(JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.ID='AND JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PARTIDA.ID=PUNTUACIONES.PARTIDA_ID");
-	//strcat (consulta, username);
-	//strcat (consulta, "'");
+	sprintf(consulta,"SELECT PARTIDA.ID FROM(JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.USERNAME='%s' AND JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PARTIDA.ID=PUNTUACIONES.PARTIDA_ID;", username);
+	printf("%s \n", consulta);
 	
-	err=mysql_query(connval, consulta);
-	if(err!=0){
+	err = mysql_query(connval, consulta);
+	
+	if (err != 0) {
 		printf("Error en la consulta\n");
 		mysql_errno(connval), mysql_error(connval);
-		exit(1);}
-	resultado=mysql_store_result(connval);
-	row = mysql_fetch_row (resultado);
-	
-	// cerrar la conexion con el servidor MYSQL 
-	if (row == NULL || atoi(row[0]) == 0)
 		return -1;
-	else
-		return atoi(row[0]);
+	}
 	
+	resultado = mysql_store_result(connval);
+	
+	// Recorrer todas las filas del resultado
+	int i = 0;
+	while ((row = mysql_fetch_row(resultado)) && i < max_resultados) {
+		int id_partida = atoi(row[0]);
+		resultados[i] = id_partida;
+		printf("%d\n", id_partida);
+		i++;
+	}
+	// Si no hay filas en el resultado, devolver -1
+	if (i == 0) {
+		return 0;
+	} else {
+		return i;
+	}
 }
 
-int Estadio(char stadio[20], MYSQL * conn){
+
+int JugadoresEnEstadio(char stadio[20], MYSQL * conn){
 	
 	int err;
 	int id_jugador;
-	char consulta[150];
+	char consulta[2048];
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
 	
@@ -196,7 +196,7 @@ int estadio(char stadio[20], MYSQL * conn){
 	
 	int err;
 	int jugador_id;
-	char consulta[150];
+	char consulta[2048];
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
 	

@@ -30,7 +30,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
-            IPEndPoint ipep = new IPEndPoint(direc, 9060);
+            IPEndPoint ipep = new IPEndPoint(direc, 9050);
             
 
             //Creamos el socket 
@@ -91,17 +91,34 @@ namespace WindowsFormsApplication1
             if (partidas.Checked)
             {
                 string mensaje = "3/" + nombre.Text;
-                // Enviamos al servidor el nombre tecleado
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
                 MessageBox.Show(mensaje);
 
                 //Recibimos la respuesta del servidor
-                byte[] msg2 = new byte[80];
-                server.Receive(msg2);
-                mensaje = Encoding.ASCII.GetString(msg2).Split ('\0')[0];
-                MessageBox.Show("ID de les partides on ha participat: " + mensaje);
+                byte[] buffer = new byte[4096];
+                server.Receive(buffer);
+                int num_resultados = BitConverter.ToInt32(buffer, 0);
+                int[] resultados = new int[num_resultados];
+                for (int i = 0; i < num_resultados; i++)
+                {
+                    resultados[i] = BitConverter.ToInt32(buffer, 4 + i * 4);
+                }
+                if (num_resultados == 0)
+                {
+                    MessageBox.Show("No hi ha dades");
+                }
+                else
+                {
+                    string mensaje_resultados = "";
+                    for (int i = 0; i < num_resultados; i++)
+                    {
+                        mensaje_resultados += resultados[i].ToString() + "\n";
+                    }
+                    MessageBox.Show("ID de les partides on ha participat:\n" + mensaje_resultados);
+                }
             }
+
             else if (dosgoles.Checked)
             {
                 string mensaje = "4/" ;
