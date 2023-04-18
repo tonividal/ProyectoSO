@@ -171,6 +171,20 @@ namespace WindowsFormsApplication1
 
 
         }
+        private void button6_Click(object sender, EventArgs e)
+        {
+            //Pedir numero de servicios realizados
+            string mensaje = "6/";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+            cont_lbl.Text = "eubcei";
+
+            //Recibimos la respuesta del servidor
+            byte[] msg2 = new byte[80];
+            server.Receive(msg2);
+            mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+            cont_lbl.Text = mensaje;
+        }
 
         private void Longitud_CheckedChanged(object sender, EventArgs e)
         {
@@ -182,6 +196,6 @@ namespace WindowsFormsApplication1
 
         }
 
-     
+       
     }
 }
