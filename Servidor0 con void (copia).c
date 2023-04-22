@@ -11,6 +11,21 @@
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
 
+//Estructura de datos para almacenar 50 conectados
+typedef struct{
+	char nombre[20];
+	int socket;
+	
+}Conectado;
+
+typedef struct{
+	Conectado conectados[50];
+	int num;
+}ListaConectados;
+
+ListaConectados milista;
+char conectados[300];
+
 void *AtenderCliente (void *socket)
 {
 	int sock_conn;
@@ -31,7 +46,92 @@ void *AtenderCliente (void *socket)
 	int terminar=0;
 	char username[20];
 	char password[20], stadio[20];
-	// Atenderemos solo 10 peticione
+	// Atenderemos solo 10 peticiones
+	
+	
+	
+	int AnadirConectado(char nombre[20], int socket, ListaConectados *lista)
+	{
+		
+		if (lista->num==100)
+			return -1;
+		else{
+			//Al modificar la lista de conectados necesitamos garantizar el acceso excluyente
+			pthread_mutex_lock(&mutex);
+			strcpy(lista->conectados[lista->num].nombre,nombre);
+			lista->conectados[lista->num].socket = socket;
+			lista->num++;
+			pthread_mutex_unlock(&mutex);
+			return 0;
+		}
+		
+	}
+	int DameSocket(ListaConectados *lista, char nombre[20])
+	{
+		int i = 0;
+		int encontrado = 0;
+		while (encontrado == 0 && lista->num != i){
+			if(strcmp(lista->conectados[i].nombre,nombre) == 0)
+				encontrado = 1;
+			else
+				i++;
+		}
+		if (encontrado == 0)
+			return -1;
+		else
+			return lista->conectados[i].socket;
+	}
+	int DamePosicion(char nombre[20],ListaConectados *lista)
+	{
+		
+		int i = 0;
+		int encontrado = 0;
+		while ((encontrado == 0) && (lista->num != i)){
+			if(strcmp(lista->conectados[i].nombre,nombre) == 0)
+				encontrado = 1;
+			else
+				i++;
+		}
+		if (encontrado == 0)
+			return -1;
+		else
+			return i;
+	}
+	int EliminarConectado(char nombre[20],ListaConectados *lista)
+	{
+		int pos = DamePosicion(nombre,lista);
+		
+		if(pos == -1)
+			return -1;
+		else{
+			int i;
+			for(i = pos; i < lista -> num; i++){
+				pthread_mutex_lock(&mutex);
+				lista->conectados[i].socket = lista->conectados[i+1].socket;
+				strcpy(lista->conectados[i].nombre,lista->conectados[i+1].nombre);
+				lista->num = lista->num -1;
+				pthread_mutex_unlock(&mutex);
+			}
+			return 0;
+			
+		}
+	}
+	void DameConectados(ListaConectados *milista, char resultado[200])
+	{
+		sprintf(resultado,"%d/",milista->num);
+		int i;
+		for(i = 0; i < milista->num; i++){
+			sprintf(resultado,"%s%s/",resultado,milista->conectados[i].nombre);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 		while(!terminar){
 			
@@ -49,13 +149,12 @@ void *AtenderCliente (void *socket)
 			printf("La peticion es: %s\n",peticion);
 			char *p = strtok(peticion, "/");
 			int codigo =  atoi (p);
+			printf("%d\n", codigo);
 			p = strtok( NULL, "/");
 			strcpy (username, p);
 			
 			
 			int i;
-			int sockets[100];
-			pthread_t thread;
 			i=0;
 			/*if ((codigo !=0)&&(codigo!=6))
 				
@@ -75,11 +174,9 @@ void *AtenderCliente (void *socket)
 			else if (codigo == 6)
 				
 			{
-				sprintf(respuesta, "%d", contador);
-				
-				printf("Respuesta: %s\n", respuesta);
-				
-				write(sock_conn, respuesta, strlen(respuesta));
+				char ListaConectados[200];
+				DameConectados(&milista, ListaConectados);
+				write (sock_conn, ListaConectados, strlen(ListaConectados));
 			}
 			
 			else if(codigo == 1)
@@ -134,17 +231,22 @@ void *AtenderCliente (void *socket)
 			
 			else if(codigo==3){//¿En qué partidas ha participado el "Playertwo"?
 				printf("Codigo: %d, Username: %s\n", codigo, username);
-				int resu = PartidasPlayerTwo(username, conn); //provar de borrar el bin
-				sprintf(respuesta,"%d", resu);
+				int resu = PartidasPlayerTwo(username, conn, respuesta); //provar de borrar el bin
+				if (resu==-1)
+					strcpy(respuesta, "No hay resultados");
+				//sprintf(respuesta,"%d", resu);
 				write(sock_conn, respuesta, strlen(respuesta));
+				strcpy(respuesta, "");
 			}
 			
 			else if (codigo ==4){ //¿Dime los jugadores que han jugado en un estadio?
-				p = strtok (NULL, "/");
-				strcpy(stadio, p);
 				printf ("Codigo: %d, Estadio: %s\n", codigo, stadio);
-				sprintf (respuesta,"%c", estadio(stadio, conn));
+				int resu = JugadoresEnEstadio(stadio, conn, respuesta);
+				if (resu==-1)
+					strcpy(respuesta, "No hay resultados");
+				//sprintf (respuesta,"%c", resu);
 				write (sock_conn, respuesta, strlen(respuesta));
+				strcpy(respuesta, "");
 			}
 			
 			else if (codigo ==5){ //¿Dime qué jugadores han marcado dos o más goles y en qué estadio lo han hecho?
@@ -163,8 +265,9 @@ void *AtenderCliente (void *socket)
 			}
 				
 		}
-	
+		
 }
+
 	int main(int argc, char *argv[])
 	{
 		int sock_conn, sock_listen;
@@ -181,14 +284,14 @@ void *AtenderCliente (void *socket)
 		//htonl formatea el numero que recibe al formato necesario
 		serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 		// escucharemos en el port 9050
-		serv_adr.sin_port = htons(9050);
+		serv_adr.sin_port = htons(9060);
 		if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
 			printf ("Error al bind");
 		//La cola de peticiones pendientes no podr? ser superior a 4
 		if (listen(sock_listen, 4) < 0)
 			printf("Error en el Listen");
 		
-		int contador = 0;
+		contador = 0;
 		int i;
 		int sockets[100];
 		pthread_t thread;
@@ -215,7 +318,7 @@ void *AtenderCliente (void *socket)
 	}
 
 //conval toma el valor de con cuando llama a la funcion
-int PartidasPlayerTwo(char username[20], MYSQL *connval, int* resultados, int max_resultados) {
+int PartidasPlayerTwo(char username[20], MYSQL *connval, char respuesta[512]) {
 	int err;
 	char consulta[2048];
 	MYSQL_RES* resultado;
@@ -234,25 +337,27 @@ int PartidasPlayerTwo(char username[20], MYSQL *connval, int* resultados, int ma
 	}
 	
 	resultado = mysql_store_result(connval);
-	
+	row = mysql_fetch_row(resultado);
 	// Recorrer todas las filas del resultado
+	int id_partida;
 	int i = 0;
-	while ((row = mysql_fetch_row(resultado)) && i < max_resultados) {
-		int id_partida = atoi(row[0]);
-		resultados[i] = id_partida;
-		printf("%d\n", id_partida);
+	while (row!=NULL) {
+		id_partida = atoi(row[0]);
+		sprintf(respuesta, "%s%d,", respuesta, id_partida);
+		row = mysql_fetch_row(resultado);
+		
 		i++;
 	}
 	// Si no hay filas en el resultado, devolver -1
 	if (i == 0) {
 		return -1;
 	} else {
-		return i;
+		return 1;
 	}
 }
 
 
-int JugadoresEnEstadio(char stadio[20], MYSQL * conn){
+int JugadoresEnEstadio(char stadio[20], MYSQL * conn, char respuesta[512]){
 	
 	int err;
 	int id_jugador;
@@ -260,13 +365,35 @@ int JugadoresEnEstadio(char stadio[20], MYSQL * conn){
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
 	
+		
 	printf("Dame el estadio\n");
 	sprintf(consulta,"SELECT JUGADOR.ID FROM(JUGADOR, PARTIDA) WHERE PARTIDA.STADIO='%s';",stadio);
 	err=mysql_query(conn, consulta);
-	if(err!=0){
+	if (err != 0) {
 		printf("Error en la consulta\n");
-		exit(1);}
-	resultado=mysql_store_result(conn);
+		mysql_errno(conn), mysql_error(conn);
+		return -1;
+	}
+	
+	resultado = mysql_store_result(conn);
+	row = mysql_fetch_row(resultado);
+	// Recorrer todas las filas del resultado
+	
+	int i = 0;
+	while (row!=NULL) {
+		id_jugador = atoi(row[0]);
+		sprintf(respuesta, "%s%d,", respuesta, id_jugador);
+		row = mysql_fetch_row(resultado);
+		
+		i++;
+	}
+	// Si no hay filas en el resultado, devolver -1
+	if (i == 0) {
+		return -1;
+	} else {
+		return 1;
+	}
+	
 	
 	
 }
@@ -279,12 +406,13 @@ int estadio(char stadio[20], MYSQL * conn){
 	MYSQL_RES*resultado;
 	MYSQL_ROW row;
 	
+	resultado=mysql_store_result(conn);
 	err=mysql_query(conn, "SELECT JUGADOR.USERNAME, PARTIDA.STADIO FROM (JUGADOR, PARTIDA, PUNTUACIONES) WHERE JUGADOR.ID=PUNTUACIONES.JUGADOR_ID AND PUNTUACIONES.PARTIDA_ID=PARTIDA.ID AND PUNTUACIONES.GOLS >=2;");
 	if (err!=0) {
 		printf ("Error al consultar datos de la base %u %s\n", mysql_errno(conn), mysql_error(conn));
 		exit (1);
 	}
-	resultado=mysql_store_result(conn);
+	
 	
 }
 

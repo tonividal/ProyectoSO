@@ -38,7 +38,7 @@ namespace WindowsFormsApplication1
             try
             {
                 server.Connect(ipep);//Intentamos conectar el socket
-                this.BackColor = Color.Green;
+                this.BackColor = Color.LimeGreen;
                 MessageBox.Show("Connectat");
 
             }
@@ -123,7 +123,7 @@ namespace WindowsFormsApplication1
 
             else if (dosgoles.Checked)
             {
-                string mensaje = "4/" ;
+                string mensaje = "5/" ;
                 // Enviamos al servidor el nombre tecleado
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
@@ -134,16 +134,13 @@ namespace WindowsFormsApplication1
                 mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
                 MessageBox.Show("Jugadors amb més de dos gols i l'estadi: " + mensaje);
 
-               /* if (mensaje == "SI")
-                    MessageBox.Show("Tu nombre ES bonito.");
-                else
-                    MessageBox.Show("Tu nombre NO bonito. Lo siento.");*/
+              
 
             }
             else if (jugadresenestadio.Checked)
             {
-                // Enviamos nombre y altura
-                string mensaje = "5/" + estadioBox.Text;
+               
+                string mensaje = "4/" + estadioBox.Text;
                 // Enviamos al servidor el nombre tecleado
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
@@ -151,8 +148,8 @@ namespace WindowsFormsApplication1
                 //Recibimos la respuesta del servidor
                 byte[] msg2 = new byte[80];
                 server.Receive(msg2);
-                mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                MessageBox.Show("Jugadors que han jugat allà: " +mensaje);
+                string mensajeRespuesta = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                MessageBox.Show(mensajeRespuesta);
             }
              
         
