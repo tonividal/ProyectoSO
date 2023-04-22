@@ -30,7 +30,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
-            IPEndPoint ipep = new IPEndPoint(direc, 9050);
+            IPEndPoint ipep = new IPEndPoint(direc, 9060);
             
 
             //Creamos el socket 
@@ -98,13 +98,13 @@ namespace WindowsFormsApplication1
                 //Recibimos la respuesta del servidor
                 byte[] buffer = new byte[4096];
                 server.Receive(buffer);
-                int num_resultados = BitConverter.ToInt32(buffer, 0);
-                int[] resultados = new int[num_resultados];
-                for (int i = 0; i < num_resultados; i++)
+                //int num_resultados = BitConverter.ToInt32(buffer, 0);
+                //int[] resultados = new int[num_resultados];
+                /*for (int i = 0; i < num_resultados; i++)
                 {
                     resultados[i] = BitConverter.ToInt32(buffer, 4 + i * 4);
-                }
-                if (num_resultados == 0)
+                }*/
+                /*if (num_resultados == 0)
                 {
                     MessageBox.Show("No hi ha dades");
                 }
@@ -116,7 +116,9 @@ namespace WindowsFormsApplication1
                         mensaje_resultados += resultados[i].ToString() + "\n";
                     }
                     MessageBox.Show("ID de les partides on ha participat:\n" + mensaje_resultados);
-                }
+                }*/
+                string mensajeRespuesta = Encoding.ASCII.GetString(buffer).Split('\0')[0];
+                MessageBox.Show(mensajeRespuesta);
             }
 
             else if (dosgoles.Checked)
