@@ -30,7 +30,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
-            IPEndPoint ipep = new IPEndPoint(direc, 9060);
+            IPEndPoint ipep = new IPEndPoint(direc, 9070);
             
 
             //Creamos el socket 
@@ -172,17 +172,29 @@ namespace WindowsFormsApplication1
         }
         private void button6_Click(object sender, EventArgs e)
         {
-            //Pedir numero de servicios realizados
-            string mensaje = "6/";
+            dataGridView1.Visible = true;
+
+            //enviamos mensaje al sevidor
+            string mensaje = "6/" + user.Text + "/" + password.Text;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
-            cont_lbl.Text = "eubcei";
 
-            //Recibimos la respuesta del servidor
+            //recivimos mensaje del servidor
             byte[] msg2 = new byte[80];
             server.Receive(msg2);
-            mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-            cont_lbl.Text = mensaje;
+            mensaje = Encoding.ASCII.GetString(msg2);
+
+            string[] listaconectados = mensaje.Split('/');
+            int numerodeconectados = Convert.ToInt32(listaconectados[0]);
+            dataGridView1.ColumnCount = 1;
+            dataGridView1.RowCount = numerodeconectados;
+
+            for (int i = 1; i <= numerodeconectados; i++)
+            {
+
+                dataGridView1.Rows[i - 1].Cells[0].Value = listaconectados[i];
+
+            }
         }
 
         private void Longitud_CheckedChanged(object sender, EventArgs e)

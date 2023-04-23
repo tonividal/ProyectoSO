@@ -49,10 +49,11 @@
             this.user = new System.Windows.Forms.TextBox();
             this.button6 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.cont_lbl = new System.Windows.Forms.Label();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
@@ -269,7 +270,7 @@
             // groupBox3
             // 
             this.groupBox3.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.groupBox3.Controls.Add(this.cont_lbl);
+            this.groupBox3.Controls.Add(this.dataGridView1);
             this.groupBox3.Controls.Add(this.button6);
             this.groupBox3.Location = new System.Drawing.Point(629, 126);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
@@ -280,15 +281,18 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Llistat";
             // 
-            // cont_lbl
+            // dataGridView1
             // 
-            this.cont_lbl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.cont_lbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cont_lbl.Location = new System.Drawing.Point(68, 167);
-            this.cont_lbl.Name = "cont_lbl";
-            this.cont_lbl.Size = new System.Drawing.Size(169, 209);
-            this.cont_lbl.TabIndex = 8;
-            this.cont_lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.GridColor = System.Drawing.SystemColors.Control;
+            this.dataGridView1.Location = new System.Drawing.Point(32, 199);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.RowTemplate.Height = 24;
+            this.dataGridView1.Size = new System.Drawing.Size(240, 150);
+            this.dataGridView1.TabIndex = 13;
+            this.dataGridView1.Visible = false;
             // 
             // Form1
             // 
@@ -312,6 +316,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -338,7 +343,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label cont_lbl;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
 

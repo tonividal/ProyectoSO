@@ -10,6 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
+int port=9070;
 
 //Estructura de datos para almacenar 50 conectados
 typedef struct{
@@ -24,7 +25,7 @@ typedef struct{
 }ListaConectados;
 
 ListaConectados milista;
-char conectados[300];
+char conectados[50];
 
 void *AtenderCliente (void *socket)
 {
@@ -49,6 +50,13 @@ void *AtenderCliente (void *socket)
 	// Atenderemos solo 10 peticiones
 	
 	
+	//Creamos conexion sql (ya está dentro del while pero lo volvemos a hacer para la lista de conectados)
+	MYSQL *conn;
+	int err;
+	MYSQL_RES *resultado;
+	MYSQL_ROW row;
+	
+		
 	
 	int AnadirConectado(char nombre[20], int socket, ListaConectados *lista)
 	{
@@ -167,6 +175,11 @@ void *AtenderCliente (void *socket)
 			}*/
 			if (codigo ==0) //petici?n de desconexi?n
 			{
+				int res = EliminarConectado(username, &milista);
+				if (res==-1)
+					printf("Error al eliminar usuario\n");
+				else
+					printf("Usuario eliminado correctamente\n");
 				
 				terminar = 1;
 				
@@ -222,6 +235,23 @@ void *AtenderCliente (void *socket)
 				else
 				{	
 					strcpy(respuesta1, "SI");
+					
+					//Añadimos al usuario a la Lista de Conectados
+					int res = AnadirConectado(username, socket, &milista);
+					if (res==-1)
+						printf("La lista está llena\n");
+					else
+						printf("Añadido correctamente\n");
+					
+					int socket= DameSocket(&milista, username);
+					if (socket!=-1)
+						printf("'%s' -> %d\n", username, socket);
+					else
+						printf("Ese usuario no existe\n");
+					
+					char ListaConectados[200];
+					DameConectados(&milista, ListaConectados);
+					printf("Resultado:'%s'\n", ListaConectados);
 					
 				}
 				
@@ -284,7 +314,7 @@ void *AtenderCliente (void *socket)
 		//htonl formatea el numero que recibe al formato necesario
 		serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 		// escucharemos en el port 9050
-		serv_adr.sin_port = htons(9060);
+		serv_adr.sin_port = htons(port);
 		if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
 			printf ("Error al bind");
 		//La cola de peticiones pendientes no podr? ser superior a 4
