@@ -58,88 +58,6 @@ void *AtenderCliente (void *socket)
 	
 		
 	
-	int AnadirConectado(char nombre[20], int socket, ListaConectados *lista)
-	{
-		
-		if (lista->num==100)
-			return -1;
-		else{
-			//Al modificar la lista de conectados necesitamos garantizar el acceso excluyente
-			pthread_mutex_lock(&mutex);
-			strcpy(lista->conectados[lista->num].nombre,nombre);
-			lista->conectados[lista->num].socket = socket;
-			lista->num++;
-			pthread_mutex_unlock(&mutex);
-			return 0;
-		}
-		
-	}
-	int DameSocket(ListaConectados *lista, char nombre[20])
-	{
-		int i = 0;
-		int encontrado = 0;
-		while (encontrado == 0 && lista->num != i){
-			if(strcmp(lista->conectados[i].nombre,nombre) == 0)
-				encontrado = 1;
-			else
-				i++;
-		}
-		if (encontrado == 0)
-			return -1;
-		else
-			return lista->conectados[i].socket;
-	}
-	int DamePosicion(char nombre[20],ListaConectados *lista)
-	{
-		
-		int i = 0;
-		int encontrado = 0;
-		while ((encontrado == 0) && (lista->num != i)){
-			if(strcmp(lista->conectados[i].nombre,nombre) == 0)
-				encontrado = 1;
-			else
-				i++;
-		}
-		if (encontrado == 0)
-			return -1;
-		else
-			return i;
-	}
-	int EliminarConectado(char nombre[20],ListaConectados *lista)
-	{
-		int pos = DamePosicion(nombre,lista);
-		
-		if(pos == -1)
-			return -1;
-		else{
-			int i;
-			for(i = pos; i < lista -> num; i++){
-				pthread_mutex_lock(&mutex);
-				lista->conectados[i].socket = lista->conectados[i+1].socket;
-				strcpy(lista->conectados[i].nombre,lista->conectados[i+1].nombre);
-				lista->num = lista->num -1;
-				pthread_mutex_unlock(&mutex);
-			}
-			return 0;
-			
-		}
-	}
-	void DameConectados(ListaConectados *milista, char resultado[200])
-	{
-		sprintf(resultado,"%d/",milista->num);
-		int i;
-		for(i = 0; i < milista->num; i++){
-			sprintf(resultado,"%s%s/",resultado,milista->conectados[i].nombre);
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 		while(!terminar){
 			
@@ -158,8 +76,7 @@ void *AtenderCliente (void *socket)
 			char *p = strtok(peticion, "/");
 			int codigo =  atoi (p);
 			printf("%d\n", codigo);
-			p = strtok( NULL, "/");
-			strcpy (username, p);
+			
 			
 			
 			int i;
@@ -194,6 +111,8 @@ void *AtenderCliente (void *socket)
 			
 			else if(codigo == 1)
 			{
+				p = strtok( NULL, "/");
+				strcpy (username, p);
 				p = strtok (NULL, "/");
 				strcpy(password, p);
 				printf ("Codigo: %d, Username: %s, password: %s\n", codigo, username, password);
@@ -260,6 +179,8 @@ void *AtenderCliente (void *socket)
 			}
 			
 			else if(codigo==3){//¿En qué partidas ha participado el "Playertwo"?
+				p = strtok( NULL, "/");
+				strcpy (username, p);
 				printf("Codigo: %d, Username: %s\n", codigo, username);
 				int resu = PartidasPlayerTwo(username, conn, respuesta); //provar de borrar el bin
 				if (resu==-1)
@@ -270,6 +191,8 @@ void *AtenderCliente (void *socket)
 			}
 			
 			else if (codigo ==4){ //¿Dime los jugadores que han jugado en un estadio?
+				p = strtok( NULL, "/");
+				strcpy (stadio, p);
 				printf ("Codigo: %d, Estadio: %s\n", codigo, stadio);
 				int resu = JugadoresEnEstadio(stadio, conn, respuesta);
 				if (resu==-1)
@@ -297,6 +220,86 @@ void *AtenderCliente (void *socket)
 		}
 		
 }
+
+
+int AnadirConectado(char nombre[20], int socket, ListaConectados *lista)
+{
+	
+	if (lista->num==100)
+		return -1;
+	else{
+		//Al modificar la lista de conectados necesitamos garantizar el acceso excluyente
+		pthread_mutex_lock(&mutex);
+		strcpy(lista->conectados[lista->num].nombre,nombre);
+		lista->conectados[lista->num].socket = socket;
+		lista->num++;
+		pthread_mutex_unlock(&mutex);
+		return 0;
+	}
+	
+}
+int DameSocket(ListaConectados *lista, char nombre[20])
+{
+	int i = 0;
+	int encontrado = 0;
+	while (encontrado == 0 && lista->num != i){
+		if(strcmp(lista->conectados[i].nombre,nombre) == 0)
+			encontrado = 1;
+		else
+			i++;
+	}
+	if (encontrado == 0)
+		return -1;
+	else
+		return lista->conectados[i].socket;
+}
+int DamePosicion(char nombre[20],ListaConectados *lista)
+{
+	
+	int i = 0;
+	int encontrado = 0;
+	while ((encontrado == 0) && (lista->num != i)){
+		if(strcmp(lista->conectados[i].nombre,nombre) == 0)
+			encontrado = 1;
+		else
+			i++;
+	}
+	if (encontrado == 0)
+		return -1;
+	else
+		return i;
+}
+int EliminarConectado(char nombre[20],ListaConectados *lista)
+{
+	int pos = DamePosicion(nombre,lista);
+	
+	if(pos == -1)
+		return -1;
+	else{
+		int i;
+		for(i = pos; i < lista -> num; i++){
+			pthread_mutex_lock(&mutex);
+			lista->conectados[i].socket = lista->conectados[i+1].socket;
+			strcpy(lista->conectados[i].nombre,lista->conectados[i+1].nombre);
+			lista->num = lista->num -1;
+			pthread_mutex_unlock(&mutex);
+		}
+		return 0;
+		
+	}
+}
+void DameConectados(ListaConectados *milista, char resultado[200])
+{
+	sprintf(resultado,"%d/",milista->num);
+	int i;
+	for(i = 0; i < milista->num; i++){
+		sprintf(resultado,"%s%s/",resultado,milista->conectados[i].nombre);
+	}
+}
+
+
+
+
 
 	int main(int argc, char *argv[])
 	{
