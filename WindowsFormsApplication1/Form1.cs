@@ -8,12 +8,14 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
         Socket server;
+        Thread atender;
         public Form1()
         {
             InitializeComponent();
@@ -23,6 +25,84 @@ namespace WindowsFormsApplication1
         {
 
            
+        }
+
+        private void PonContador(string mensaje)
+        {
+            contLbl.Text = mensaje;
+        }
+
+        private void AtenderServidor()
+        {
+            while (true)
+            {
+                //Recibimos mensaje del servidor
+                byte[] msg2 = new byte[4096];
+                server.Receive(msg2);
+                string[] trozos = Encoding.ASCII.GetString(msg2).Split('/');
+                int codigo = Convert.ToInt32(trozos[0]);
+                string mensaje = mensaje = trozos[1].Split('\0')[0];
+
+                switch (codigo)
+                {
+                    case 1:  // respuesta a conectar
+
+                        if (mensaje == "SI")
+                            MessageBox.Show("Ok, has entrat");
+                        else
+                            MessageBox.Show("credencials incorrectes.");
+                        break;
+                    case 2:      //respuesta a desconectar
+
+
+                        if (mensaje == "SI")
+                            MessageBox.Show("Ok");
+                        else
+                            MessageBox.Show("credencials incorrectes.");
+                        break;
+                    case 3:       //respuesta a primera consulta
+
+                        string mensajeRespuesta = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                        MessageBox.Show(mensajeRespuesta);
+                        break;
+
+                    case 4:     //respuesta a segunda consulta
+
+                        string mensajeRespuesta2 = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                        MessageBox.Show(mensajeRespuesta2);
+
+                        break;
+                    case 5:      //respuesta a tercera consulta
+
+                        mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                        MessageBox.Show("Jugadors amb més de dos gols i l'estadi: " + mensaje);
+
+                        break;
+                    case 6:    //lista de conectados
+                        string[] listaconectados = mensaje.Split('/');
+                        int numerodeconectados = Convert.ToInt32(listaconectados[0]);
+                        dataGridView1.ColumnCount = 1;
+                        dataGridView1.RowCount = numerodeconectados;
+
+                        for (int i = 1; i <= numerodeconectados; i++)
+                        {
+
+                            dataGridView1.Rows[i - 1].Cells[0].Value = listaconectados[i];
+
+                        }
+                        break;
+                   
+                    case 7:     //Recibimos notificacion
+
+                        //Haz tu lo que no me dejas hacer a mi
+                        contLbl.Invoke(new Action(() =>
+                        {
+                            contLbl.Text = mensaje;
+                        }));
+
+                        break;
+                }
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -40,6 +120,10 @@ namespace WindowsFormsApplication1
                 server.Connect(ipep);//Intentamos conectar el socket
                 this.BackColor = Color.LimeGreen;
                 MessageBox.Show("Connectat");
+                //pongo en marcha el thread que atenderá los mensajes del servidor
+                ThreadStart ts = delegate { AtenderServidor(); };
+                atender = new Thread(ts);
+                atender.Start();
 
             }
             catch (SocketException ex)
@@ -57,15 +141,7 @@ namespace WindowsFormsApplication1
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
 
-            //Recibimos la respuesta del servidor
-            byte[] msg2 = new byte[80];
-            server.Receive(msg2);
-            mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-
-            if (mensaje == "SI")
-                MessageBox.Show("Ok, has entrat");
-            else
-                MessageBox.Show("credencials incorrectes.");
+            
 
         }
 
@@ -76,15 +152,6 @@ namespace WindowsFormsApplication1
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
 
-            //Recibimos la respuesta del servidor
-            byte[] msg2 = new byte[80];
-            server.Receive(msg2);
-            mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-
-            if (mensaje == "SI")
-                MessageBox.Show("Ok");
-            else
-                MessageBox.Show("credencials incorrectes.");
         }
         private void button2_Click(object sender, EventArgs e)
         {
@@ -95,30 +162,7 @@ namespace WindowsFormsApplication1
                 server.Send(msg);
                 MessageBox.Show(mensaje);
 
-                //Recibimos la respuesta del servidor
-                byte[] buffer = new byte[4096];
-                server.Receive(buffer);
-                //int num_resultados = BitConverter.ToInt32(buffer, 0);
-                //int[] resultados = new int[num_resultados];
-                /*for (int i = 0; i < num_resultados; i++)
-                {
-                    resultados[i] = BitConverter.ToInt32(buffer, 4 + i * 4);
-                }*/
-                /*if (num_resultados == 0)
-                {
-                    MessageBox.Show("No hi ha dades");
-                }
-                else
-                {
-                    string mensaje_resultados = "";
-                    for (int i = 0; i < num_resultados; i++)
-                    {
-                        mensaje_resultados += resultados[i].ToString() + "\n";
-                    }
-                    MessageBox.Show("ID de les partides on ha participat:\n" + mensaje_resultados);
-                }*/
-                string mensajeRespuesta = Encoding.ASCII.GetString(buffer).Split('\0')[0];
-                MessageBox.Show(mensajeRespuesta);
+               
             }
 
             else if (dosgoles.Checked)
@@ -145,11 +189,6 @@ namespace WindowsFormsApplication1
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
 
-                //Recibimos la respuesta del servidor
-                byte[] msg2 = new byte[80];
-                server.Receive(msg2);
-                string mensajeRespuesta = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-                MessageBox.Show(mensajeRespuesta);
             }
              
         
@@ -164,6 +203,7 @@ namespace WindowsFormsApplication1
             server.Send(msg);
 
             // Nos desconectamos
+            atender.Abort();
             this.BackColor = Color.Gray;
             server.Shutdown(SocketShutdown.Both);
             server.Close();
@@ -179,22 +219,6 @@ namespace WindowsFormsApplication1
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
 
-            //recivimos mensaje del servidor
-            byte[] msg2 = new byte[80];
-            server.Receive(msg2);
-            mensaje = Encoding.ASCII.GetString(msg2);
-
-            string[] listaconectados = mensaje.Split('/');
-            int numerodeconectados = Convert.ToInt32(listaconectados[0]);
-            dataGridView1.ColumnCount = 1;
-            dataGridView1.RowCount = numerodeconectados;
-
-            for (int i = 1; i <= numerodeconectados; i++)
-            {
-
-                dataGridView1.Rows[i - 1].Cells[0].Value = listaconectados[i];
-
-            }
         }
 
         private void Longitud_CheckedChanged(object sender, EventArgs e)

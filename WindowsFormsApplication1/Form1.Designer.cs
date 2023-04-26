@@ -50,6 +50,7 @@
             this.button6 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.contLbl = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -294,12 +295,22 @@
             this.dataGridView1.TabIndex = 13;
             this.dataGridView1.Visible = false;
             // 
+            // contLbl
+            // 
+            this.contLbl.AutoSize = true;
+            this.contLbl.Location = new System.Drawing.Point(46, 27);
+            this.contLbl.Name = "contLbl";
+            this.contLbl.Size = new System.Drawing.Size(46, 17);
+            this.contLbl.TabIndex = 13;
+            this.contLbl.Text = "label5";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(999, 592);
+            this.Controls.Add(this.contLbl);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button3);
@@ -318,6 +329,7 @@
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -344,6 +356,7 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label contLbl;
     }
 }
 
