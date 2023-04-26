@@ -12,6 +12,8 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
 int port=9070;
 
+
+
 //Estructura de datos para almacenar 50 conectados
 typedef struct{
 	char nombre[20];
@@ -101,13 +103,7 @@ void *AtenderCliente (void *socket)
 				terminar = 1;
 				
 			}
-			else if (codigo == 6)
-				
-			{
-				char ListaConectados[200];
-				DameConectados(&milista, ListaConectados);
-				write (sock_conn, ListaConectados, strlen(ListaConectados));
-			}
+			
 			
 			else if(codigo == 1)
 			{
@@ -214,6 +210,14 @@ void *AtenderCliente (void *socket)
 				pthread_mutex_lock( &mutex ); //que no interrumpa
 				contador =  contador + 1;
 				pthread_mutex_unlock( &mutex ); //ya puede interrumpir
+				
+				char notifi[50];
+				sprintf(notifi,"%d", contador);
+				int j;
+				int sockets[100];
+				for(j=0;j<i;j++){
+					write(sockets[j],notifi,strlen(notifi));
+				}
 				
 			}
 				
