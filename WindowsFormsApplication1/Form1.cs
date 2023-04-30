@@ -16,9 +16,11 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
+        int port = 9070;
         public Form1()
         {
             InitializeComponent();
+            CheckForIllegalCrossThreadCalls = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -78,8 +80,8 @@ namespace WindowsFormsApplication1
                         MessageBox.Show("Jugadors amb més de dos gols i l'estadi: " + mensaje);
 
                         break;
-                    case 6:    //lista de conectados
-                        string[] listaconectados = mensaje.Split('/');
+                    /*case 6:    //lista de conectados
+                         string[] listaconectados = mensaje.Split('/');
                         int numerodeconectados = Convert.ToInt32(listaconectados[0]);
                         dataGridView1.ColumnCount = 1;
                         dataGridView1.RowCount = numerodeconectados;
@@ -87,11 +89,37 @@ namespace WindowsFormsApplication1
                         for (int i = 1; i <= numerodeconectados; i++)
                         {
 
-                            dataGridView1.Rows[i - 1].Cells[0].Value = listaconectados[i];
+                            dataGridView1.Rows[i -1].Cells[0].Value = listaconectados[i];
 
                         }
+                        break;*/
+                    case 6:    //lista de conectados
+                        string[] listaconectados = mensaje.Split('/');
+                        int numerodeconectados = Convert.ToInt32(listaconectados[0]);
+
+                        if (dataGridView1.InvokeRequired)
+                        {
+                            dataGridView1.Invoke(new MethodInvoker(delegate
+                            {
+                                dataGridView1.ColumnCount = 1;
+                            }));
+                        }
+                        else
+                        {
+                            dataGridView1.ColumnCount = 1;
+                        }
+
+                        dataGridView1.RowCount = numerodeconectados;
+                        
+
+
+                        for (int i = 1; i < numerodeconectados - 1; i++)
+                        {
+                            dataGridView1.Rows[i].Cells[0].Value = listaconectados[i + 1];
+                        }
                         break;
-                   
+
+
                     case 7:     //Recibimos notificacion
 
                         //Haz tu lo que no me dejas hacer a mi
@@ -110,7 +138,7 @@ namespace WindowsFormsApplication1
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
-            IPEndPoint ipep = new IPEndPoint(direc, 9070);
+            IPEndPoint ipep = new IPEndPoint(direc, port);
             
 
             //Creamos el socket 
@@ -210,7 +238,7 @@ namespace WindowsFormsApplication1
 
 
         }
-        private void button6_Click(object sender, EventArgs e)
+        /*private void button6_Click(object sender, EventArgs e)
         {
             dataGridView1.Visible = true;
 
@@ -219,7 +247,7 @@ namespace WindowsFormsApplication1
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
 
-        }
+        }*/
 
         private void Longitud_CheckedChanged(object sender, EventArgs e)
         {

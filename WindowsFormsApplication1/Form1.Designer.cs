@@ -47,7 +47,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.password = new System.Windows.Forms.TextBox();
             this.user = new System.Windows.Forms.TextBox();
-            this.button6 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.contLbl = new System.Windows.Forms.Label();
@@ -258,21 +257,10 @@
             this.user.Size = new System.Drawing.Size(195, 27);
             this.user.TabIndex = 0;
             // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(95, 68);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(107, 69);
-            this.button6.TabIndex = 6;
-            this.button6.Text = "Demana llista de connectats";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
             // groupBox3
             // 
             this.groupBox3.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.groupBox3.Controls.Add(this.dataGridView1);
-            this.groupBox3.Controls.Add(this.button6);
             this.groupBox3.Location = new System.Drawing.Point(629, 126);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
@@ -293,7 +281,6 @@
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.Size = new System.Drawing.Size(240, 150);
             this.dataGridView1.TabIndex = 13;
-            this.dataGridView1.Visible = false;
             // 
             // contLbl
             // 
@@ -353,7 +340,6 @@
         private System.Windows.Forms.TextBox user;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label contLbl;

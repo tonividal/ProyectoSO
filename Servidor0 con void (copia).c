@@ -11,7 +11,7 @@
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
 int port=9070;
-
+int sockets[100];
 
 
 //Estructura de datos para almacenar 50 conectados
@@ -102,6 +102,14 @@ void *AtenderCliente (void *socket)
 				
 				terminar = 1;
 				
+				int j;
+				char notifi[200];
+				DameConectados(&milista, notifi);
+				//bucle para mandar notificacion(for hecho en clase)
+				for(j=0;j<i;j++)
+					write(sockets[j], notifi, strlen(notifi));
+				printf("Resultado:'%s'\n", notifi);
+				
 			}
 			
 			
@@ -145,11 +153,13 @@ void *AtenderCliente (void *socket)
 				
 				if (row[0] == NULL){
 					printf("No hay datos\n");
-					strcpy(respuesta1, "NO");
+					strcpy(respuesta1, "1/NO");
+					write (sock_conn, respuesta1, strlen(respuesta1));
 				}
 				else
 				{	
-					strcpy(respuesta1, "SI");
+					strcpy(respuesta1, "1/SI");
+					write (sock_conn, respuesta1, strlen(respuesta1));
 					
 					//Añadimos al usuario a la Lista de Conectados
 					int res = AnadirConectado(username, socket, &milista);
@@ -164,9 +174,19 @@ void *AtenderCliente (void *socket)
 					else
 						printf("Ese usuario no existe\n");
 					
-					char ListaConectados[200];
-					DameConectados(&milista, ListaConectados);
-					printf("Resultado:'%s'\n", ListaConectados);
+					
+					int j;
+					char notifi[200];
+					char notifi2[200];
+					DameConectados(&milista, notifi);
+					sprintf(notifi2, "6/%s", notifi);
+					//bucle para mandar notificacion(for hecho en clase)
+					for(j=0;j<200;j++){
+						write(sockets[j], notifi2, strlen(notifi2));
+						
+					}
+					printf("Resultado:'%s'\n", notifi);
+					printf("Resultado:'%s'\n", notifi2);
 					
 				}
 				
@@ -179,10 +199,13 @@ void *AtenderCliente (void *socket)
 				strcpy (username, p);
 				printf("Codigo: %d, Username: %s\n", codigo, username);
 				int resu = PartidasPlayerTwo(username, conn, respuesta); //provar de borrar el bin
+				char respuesta2[512];
 				if (resu==-1)
-					strcpy(respuesta, "No hay resultados");
+					strcpy(respuesta2, "3/No hay resultados");
+				else
+					sprintf(respuesta2, "3/%s", respuesta);
 				//sprintf(respuesta,"%d", resu);
-				write(sock_conn, respuesta, strlen(respuesta));
+				write(sock_conn, respuesta2, strlen(respuesta2));
 				strcpy(respuesta, "");
 			}
 			
@@ -330,7 +353,7 @@ void DameConectados(ListaConectados *milista, char resultado[200])
 		
 		contador = 0;
 		int i;
-		int sockets[100];
+		//int sockets[100];
 		pthread_t thread;
 		i=0;
 		//Atenderemos 5 peticiones
@@ -380,11 +403,14 @@ int PartidasPlayerTwo(char username[20], MYSQL *connval, char respuesta[512]) {
 	int i = 0;
 	while (row!=NULL) {
 		id_partida = atoi(row[0]);
-		sprintf(respuesta, "%s%d,", respuesta, id_partida);
+		sprintf(respuesta, "%s%d/", respuesta, id_partida);
 		row = mysql_fetch_row(resultado);
 		
 		i++;
 	}
+	//printf("%s\n", respuesta);
+	//sprintf(respuesta, "3/%s", respuesta);
+	printf("%s\n", respuesta);
 	// Si no hay filas en el resultado, devolver -1
 	if (i == 0) {
 		return -1;
