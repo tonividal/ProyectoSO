@@ -16,7 +16,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9080;
+        int port = 9090;
         public Form1()
         {
             InitializeComponent();
@@ -81,82 +81,46 @@ namespace WindowsFormsApplication1
 
                         break;
 
-                   /* case 6:    //lista de conectados
-                         string[] listaconectados = mensaje.Split('/');
-                        int numerodeconectados = Convert.ToInt32(listaconectados[0]);
-                        dataGridView1.ColumnCount = 1;
-                        dataGridView1.RowCount = numerodeconectados;
-
-                        for (int i = 1; i <= numerodeconectados; i++)
-                        {
-
-                            dataGridView1.Rows[i -1].Cells[0].Value = listaconectados[i];
-
-                        }
-                        break;*/
-                     case 6:    //lista de conectados
+                    /* case 6:    //lista de conectados
                           string[] listaconectados = mensaje.Split('/');
-                          int numerodeconectados = Convert.ToInt32(listaconectados[0]);
+                         int numerodeconectados = Convert.ToInt32(listaconectados[0]);
+                         dataGridView1.ColumnCount = 1;
+                         dataGridView1.RowCount = numerodeconectados;
 
-                          if (dataGridView1.InvokeRequired)
-                          {
-                              dataGridView1.Invoke(new MethodInvoker(delegate
-                              {
-                                  dataGridView1.ColumnCount = 1;
-                              }));
-                          }
-                          else
-                          {
-                              dataGridView1.ColumnCount = 1;
-                          }
+                         for (int i = 1; i <= numerodeconectados; i++)
+                         {
 
-                          dataGridView1.RowCount = numerodeconectados;
+                             dataGridView1.Rows[i -1].Cells[0].Value = listaconectados[i];
 
+                         }
+                         break;*/
+                    case 6:    //lista de conectados
+                         string[] listaconectados = mensaje.Split('/');
+                         int numerodeconectados = Convert.ToInt32(listaconectados[0]);
 
+                         if (dataGridView1.InvokeRequired)
+                         {
+                             dataGridView1.Invoke(new MethodInvoker(delegate
+                             {
+                                 dataGridView1.ColumnCount = 2;
+                             }));
+                         }
+                         else
+                         {
+                             dataGridView1.ColumnCount = 2;
+                         }
 
-                          for (int i = 0; i < numerodeconectados - 1; i++)
-                          {
-                              dataGridView1.Rows[i].Cells[0].Value = listaconectados[i + 1];
-                          }
-                          break;
-                    /*case 6:    //lista de conectados
-                        string uno = Convert.ToString(trozos[1]);
-                        string dos = Convert.ToString(trozos[2]);
-                        string tres = Convert.ToString(trozos[3]);
-                        string[] listaconectados = mensaje.Split('/');
-                        int numerodeconectados = Convert.ToInt32(listaconectados[0]);
-
-                        if (dataGridView1.InvokeRequired)
-                        {
-                            dataGridView1.Invoke(new MethodInvoker(delegate
-                            {
-                                dataGridView1.ColumnCount = 1;
-                            }));
-                        }
-                        else
-                        {
-                            dataGridView1.ColumnCount = 1;
-                        }
-
-                        dataGridView1.RowCount = numerodeconectados;
-                        dataGridView1.Rows.Add(dos);
-                        //dataGridView1.Rows.Add(user.Text);
-                        //for (int i = 0; i < numerodeconectados; i++)
-                        for (int i = 1; i < numerodeconectados; i++)
-                        {
-                            MessageBox.Show($"Valor de la celda [{i - 1}, 0] antes de asignar: {dataGridView1.Rows[i - 1].Cells[0].Value}");
-                            MessageBox.Show($"Valor de listaconectados[{i}]: {listaconectados[i]}");
-
-                            dataGridView1.Rows[i - 1].Cells[0].Value = listaconectados[i];
-
-                            MessageBox.Show($"Valor de la celda [{i - 1}, 0] después de asignar: {dataGridView1.Rows[i - 1].Cells[0].Value}");
-                        }
+                         dataGridView1.RowCount = numerodeconectados;
 
 
-                        break;*/
+                       for (int i = 0; i < numerodeconectados + 1 && i < listaconectados.Length; i++)
+                       {
+                           dataGridView1.Rows.Add(1);
+                           dataGridView1.Rows[i].Cells[0].Value = listaconectados[i];
 
-                 
-
+                       }
+                       break;
+                    
 
 
                     case 7:     //Recibimos notificacion

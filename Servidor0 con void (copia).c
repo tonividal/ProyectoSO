@@ -10,7 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
-int port=9070;
+int port=9090;
 int sockets[100];
 
 
@@ -104,11 +104,16 @@ void *AtenderCliente (void *socket)
 				
 				int j;
 				char notifi[200];
+				char notifi2[200];
 				DameConectados(&milista, notifi);
+				sprintf(notifi2, "6/%s", notifi);
 				//bucle para mandar notificacion(for hecho en clase)
-				for(j=0;j<i;j++)
-					write(sockets[j], notifi, strlen(notifi));
+				for(j=0;j<200;j++){
+					write(sockets[j], notifi2, strlen(notifi2));
+					
+				}
 				printf("Resultado:'%s'\n", notifi);
+				printf("Resultado:'%s'\n", notifi2);
 				
 			}
 			
