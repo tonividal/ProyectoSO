@@ -26,8 +26,19 @@ typedef struct{
 	int num;
 }ListaConectados;
 
+typedef struct{
+	int idP;
+	char host[20];
+	char invitado[20];
+	int s_host;
+	int s_invitado;
+	int form_host;
+	int form_invitado;
+}Partida;
+
 ListaConectados milista;
 char conectados[50];
+Partida miPartida[100];
 
 void *AtenderCliente (void *socket)
 {
@@ -42,12 +53,17 @@ void *AtenderCliente (void *socket)
 	char respuesta[512];
 	char respuesta1[512];
 	int ret;
+	int numForm;
+	int idPartida;
+	char resp[20];
+	char frase[100];
 	int sock_listen;
 	struct sockaddr_in serv_adr;
 	
 	int i;
 	int terminar=0;
 	char username[20];
+	char username2[20];
 	char password[20], stadio[20];
 	// Atenderemos solo 10 peticiones
 	
@@ -231,7 +247,84 @@ void *AtenderCliente (void *socket)
 				write (sock_conn, respuesta, strlen(respuesta));
 			}
 			
-			if ((codigo == 3)||(codigo == 4)||(codigo == 5)||(codigo == 6))
+			else if (codigo == 7){ // Invitar a otro jugador
+				p = strtok (NULL, "/");
+				strcpy(username2, p);
+				sprintf (respuesta,"7/%s-%s",username,username2);
+				write (DameSocket(&milista,username), respuesta, strlen(respuesta));
+			}
+			
+			else if(codigo == 8)
+			{
+				p = strtok (NULL, "/");
+				strcpy(username2, p);
+				
+				p = strtok (NULL, "/");
+				strcpy(resp, p);
+				if(strcmp(resp,"SI")==0)
+				{
+					int idP = AnadirPartida (miPartida,username,username2,DameSocket(&milista, username),DameSocket(&milista, username2));
+					sprintf (respuesta,"8/%s-%s-%s-%d",username2,username,resp,idP);
+					write (DameSocket(&milista, username), respuesta, strlen(respuesta));
+					sprintf (respuesta,"11/%s-%s-%s-%d",username,username2,resp,idP);
+					write (DameSocket(&milista, username2), respuesta, strlen(respuesta));
+				}
+				
+				else
+				{
+					sprintf (respuesta,"8/%s-%s-%s",username2,username,resp);
+					write (DameSocket(&milista, username), respuesta, strlen(respuesta));
+				}
+				
+			}
+			
+			else if(codigo == 11)
+			{
+				p = strtok (NULL, "/");
+				strcpy(numForm, p);
+				printf(numForm);
+				p = strtok (NULL, "/");
+				strcpy(username, p);
+				p = strtok (NULL, "/");
+				strcpy(idPartida, p);
+				
+				AnadirFormEnPartida(miPartida,username,numForm,idPartida);
+				
+				p = strtok (NULL, "/");
+				strcpy(username2, p);
+				p = strtok (NULL, "/");
+				strcpy(resp, p);
+				if(strcmp(resp,"SI")==0)
+				{
+					int idP = AnadirPartida (miPartida,username,username2,DameSocket(&milista, username),DameSocket(&milista, username2));
+					sprintf (respuesta,"11/%s-%s-%s-%d",username2,username,resp,idP);
+					write (DameSocket(&milista, username), respuesta, strlen(respuesta));
+					sprintf (respuesta,"11/%s-%s-%s-%d",username,username2,resp,idP);
+					write (DameSocket(&milista, username2), respuesta, strlen(respuesta));
+				}
+				
+				else
+				{
+					sprintf (respuesta,"11/%s-%s-%s",username2,username,resp);
+					write (DameSocket(&milista, username), respuesta, strlen(respuesta));
+				}
+				
+			}
+			
+			else if(codigo ==10)
+			{
+				p = strtok (NULL, "/");
+				strcpy(numForm, p);
+				p = strtok (NULL, "/");
+				strcpy(idPartida, p);
+				p = strtok (NULL, "/");
+				strcpy(frase, p);
+				
+				sprintf (respuesta,"9/%s",frase);
+				write (DameSocket(&milista, username2), respuesta, strlen(respuesta));
+			}
+			
+			if ((codigo == 3)||(codigo == 4)||(codigo == 5))
 				
 			{
 				
@@ -329,8 +422,61 @@ void DameConectados(ListaConectados *milista, char resultado[200])
 	}
 }
 
+int AnadirPartida(Partida miPartida[],char nombreHost[20],char nombreInv[20], int socketH,int socketI)
+{
+	int i =0;
+	int terminado=0;
+	while(i<100 && terminado==0)
+	{
+		if(miPartida[i].idP == NULL)
+		{
+			miPartida[i].idP = i;
+			strcpy(miPartida[i].host, nombreHost);
+			
+			miPartida[i].s_host = socketH;
+			strcpy(miPartida[i].invitado, nombreInv);
+			miPartida[i].s_invitado = socketI;
+			terminado =1;
+			
+		}
+		else
+		{
+			i++;
+		}
+	}
+	if(terminado == 0)
+	{
+		return -1;
+	}
+	else
+	{
+		return i;
+	}
+} 
 
-
+void AnadirFormEnPartida(Partida miPartida[], char nombre[20], int numForm,int idP)
+{
+	int i =0;
+	int terminado =0;
+	while(i<100 && terminado==0)
+	{
+		if(strcmp(miPartida[i].host,nombre)==0 && strcmp(miPartida[i].idP,idP)==0)
+		{
+			miPartida[i].form_host=numForm;
+			terminado=1;
+		}
+		else if(strcmp(miPartida[i].invitado,nombre)==0  && strcmp(miPartida[i].idP,idP)==0)
+		{
+			miPartida[i].form_invitado=numForm;
+			terminado =1;
+		}
+		else
+		{
+			i++;
+		}
+	}
+	
+}
 
 
 	int main(int argc, char *argv[])
