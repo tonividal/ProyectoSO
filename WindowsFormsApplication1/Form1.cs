@@ -10,13 +10,19 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
+
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
         Socket server;
         Thread atender;
-        int port = 9090;
+        int port = 9060;
+        int color;
+        List<string> pdas = new List<string>();
+
+
+        string minombre, sunombre;
         public Form1()
         {
             InitializeComponent();
@@ -28,6 +34,14 @@ namespace WindowsFormsApplication1
 
            
         }
+
+        public void CoMen(string mensaje)
+        {
+            ChatdePartida.ClearSelection();
+
+            ChatdePartida.Rows.Add(mensaje);
+        }
+
 
         private void PonContador(string mensaje)
         {
@@ -123,7 +137,7 @@ namespace WindowsFormsApplication1
                     
 
 
-                    case 7:     //Recibimos notificacion
+                   /* case 7:     //Recibimos notificacion
 
                         //Haz tu lo que no me dejas hacer a mi
                         contLbl.Invoke(new Action(() =>
@@ -131,6 +145,52 @@ namespace WindowsFormsApplication1
                             contLbl.Text = mensaje;
                         }));
 
+                        break;*/
+
+
+
+                    case 7: //Invitacion a partida
+                        groupBox_invitacionPartida.Visible = true;
+                        minombre = mensaje.Split('-')[0];
+                        sunombre = mensaje.Split('-')[1];
+                        label_invitacionPartida_name.Text = sunombre + " te invita a una partida. Aceptas?";
+                        break;
+
+                    case 8: //Respuesta invitacion a partida en el caso del host
+
+                        string el = mensaje.Split('-')[0];
+                        string yo = mensaje.Split('-')[1];
+                        string resp = mensaje.Split('-')[2];
+                        int idP = Convert.ToInt32(mensaje.Split('-')[3]);
+                        this.color = 0;
+                        MessageBox.Show(el + " ha dicho: " + resp);
+                        if (resp == "SI")
+                        {
+                           
+                          
+
+                        }
+                        
+                        break;
+
+                    case 10:
+                        int num = Convert.ToInt32(mensaje.Split('-')[0]);
+                        string texto = mensaje.Split('-')[1];
+                       // pdas[num].CoMen(texto);
+                        break;
+
+                    case 11: //Respuesta de la invitacion en el caso de ser el invitado
+                        string el2 = mensaje.Split('-')[0];
+                        string yo2 = mensaje.Split('-')[1];
+                        string resp2 = mensaje.Split('-')[2];
+                        int idP2 = Convert.ToInt32(mensaje.Split('-')[3]);
+                        this.color = 1;
+                        MessageBox.Show(el2 + " ha dicho: " + resp2);
+                        if (resp2 == "SI")
+                        {
+                            
+
+                        }
                         break;
                 }
             }
@@ -253,6 +313,23 @@ namespace WindowsFormsApplication1
         }*/
 
         private void Longitud_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //8/jugador
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string mensaje = "7/" + textBox1.Text;
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+        }
+
+        private void button_invitacionPartida_si_Click(object sender, EventArgs e)
         {
 
         }
