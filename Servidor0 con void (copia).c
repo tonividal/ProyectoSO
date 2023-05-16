@@ -62,6 +62,11 @@ void *AtenderCliente (void *socket)
 	
 	int i;
 	int terminar=0;
+<<<<<<< HEAD
+=======
+	char username[20];
+	char username2[20];
+>>>>>>> 8e15ecc213ec22ef1ad13243a0e5794a288769b3
 	char password[20], stadio[20];
 	// Atenderemos solo 10 peticiones
 	
@@ -247,12 +252,19 @@ void *AtenderCliente (void *socket)
 			}
 			
 			else if (codigo == 7){ // Invitar a otro jugador
+<<<<<<< HEAD
 				printf("Mensaje\n");
 				p = strtok (NULL, "/");
 				strcpy(username2, p);
 				sprintf (respuesta,"7/%s-%s",username,username2);
 				printf("%s\n",respuesta);
 				write (DameSocket(&milista, username2), respuesta, strlen(respuesta));
+=======
+				p = strtok (NULL, "/");
+				strcpy(username2, p);
+				sprintf (respuesta,"7/%s-%s",username,username2);
+				write (DameSocket(&milista,username), respuesta, strlen(respuesta));
+>>>>>>> 8e15ecc213ec22ef1ad13243a0e5794a288769b3
 			}
 			
 			else if(codigo == 8)
