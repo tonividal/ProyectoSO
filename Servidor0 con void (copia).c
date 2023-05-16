@@ -10,7 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
-int port=9060;
+int port=9050;
 int sockets[100];
 
 
@@ -251,7 +251,8 @@ void *AtenderCliente (void *socket)
 				p = strtok (NULL, "/");
 				strcpy(username2, p);
 				sprintf (respuesta,"7/%s-%s",username,username2);
-				write (DameSocket(&milista,username), respuesta, strlen(respuesta));
+				printf("%s\n",respuesta);
+				write (DameSocket(&milista, username2), respuesta, strlen(respuesta));
 			}
 			
 			else if(codigo == 8)
@@ -363,20 +364,42 @@ int AnadirConectado(char nombre[20], int socket, ListaConectados *lista)
 	}
 	
 }
+/*int DameSocket(ListaConectados *lista, char nombre[20])
+{
+	int i = 0;
+
+	while(i<lista->num)
+{
+		if(strcmp(lista->conectados[i].nombre,nombre)==0)
+	{
+			
+		printf("socket: %s\n",lista->conectados[i].socket);	
+		return lista->conectados[i].socket;
+		
+	}
+		else
+	{
+		i++;
+	}
+	
+}
+}*/
 int DameSocket(ListaConectados *lista, char nombre[20])
 {
 	int i = 0;
+	int j = 0;
 	int encontrado = 0;
-	while (encontrado == 0 && lista->num != i){
-		if(strcmp(lista->conectados[i].nombre,nombre) == 0)
+	while (encontrado == 0 && lista->num != j){
+		if(strcmp(lista->conectados[j].nombre,nombre) == 0)
 			encontrado = 1;
 		else
-			i++;
+			j = j + 1;
 	}
 	if (encontrado == 0)
 		return -1;
 	else
-		return lista->conectados[i].socket;
+		printf("socket: %d\n",lista->conectados[i].socket);
+		return lista->conectados[j].socket;
 }
 int DamePosicion(char nombre[20],ListaConectados *lista)
 {

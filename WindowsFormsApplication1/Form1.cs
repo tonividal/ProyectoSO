@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9060;
+        int port = 9050;
         int color;
         List<string> pdas = new List<string>();
 
@@ -150,10 +150,11 @@ namespace WindowsFormsApplication1
 
 
                     case 7: //Invitacion a partida
-                        groupBox_invitacionPartida.Visible = true;
+                        MessageBox.Show(Encoding.ASCII.GetString(msg2));
+                        //groupBox_invitacionPartida.Visible = true;
                         minombre = mensaje.Split('-')[0];
                         sunombre = mensaje.Split('-')[1];
-                        label_invitacionPartida_name.Text = sunombre + " te invita a una partida. Aceptas?";
+                        label_invitacionPartida_name.Text = sunombre + " et convida a una partida, acceptes?";
                         break;
 
                     case 8: //Respuesta invitacion a partida en el caso del host
@@ -330,6 +331,11 @@ namespace WindowsFormsApplication1
         }
 
         private void button_invitacionPartida_si_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_invitar_Enter(object sender, EventArgs e)
         {
 
         }

@@ -342,6 +342,7 @@
             this.groupBox1_invitar.TabIndex = 16;
             this.groupBox1_invitar.TabStop = false;
             this.groupBox1_invitar.Text = "Convidar";
+            this.groupBox1_invitar.Enter += new System.EventHandler(this.groupBox1_invitar_Enter);
             // 
             // groupBox_invitacionPartida
             // 
