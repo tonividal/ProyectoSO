@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9050;
+        int port = 9010;
         int color;
         List<string> pdas = new List<string>();
 
@@ -37,9 +37,9 @@ namespace WindowsFormsApplication1
 
         public void CoMen(string mensaje)
         {
-            ChatdePartida.ClearSelection();
+            //ChatdePartida.ClearSelection();
 
-            ChatdePartida.Rows.Add(mensaje);
+            //ChatdePartida.Rows.Add(mensaje);
         }
 
 
@@ -58,6 +58,7 @@ namespace WindowsFormsApplication1
                 string[] trozos = Encoding.ASCII.GetString(msg2).Split('/');
                 int codigo = Convert.ToInt32(trozos[0]);
                 string mensaje = mensaje = trozos[1].Split('\0')[0];
+                //MessageBox.Show(Encoding.ASCII.GetString(msg2));
 
                 switch (codigo)
                 {
@@ -134,31 +135,31 @@ namespace WindowsFormsApplication1
 
                        }
                        break;
-                    
-
-
-                   /* case 7:     //Recibimos notificacion
-
-                        //Haz tu lo que no me dejas hacer a mi
-                        contLbl.Invoke(new Action(() =>
-                        {
-                            contLbl.Text = mensaje;
-                        }));
-
-                        break;*/
 
 
 
+                        /* case 7:     //Recibimos notificacion
+
+                             //Haz tu lo que no me dejas hacer a mi
+                             contLbl.Invoke(new Action(() =>
+                             {
+                                 contLbl.Text = mensaje;
+                             }));
+
+                             break;*/
+
+
+                       
                     case 7: //Invitacion a partida
                         MessageBox.Show(Encoding.ASCII.GetString(msg2));
                         //groupBox_invitacionPartida.Visible = true;
                         minombre = mensaje.Split('-')[0];
                         sunombre = mensaje.Split('-')[1];
-                        label_invitacionPartida_name.Text = sunombre + " et convida a una partida, acceptes?";
+                        label_invitacionPartida_name.Text = minombre + " et convida a una partida, acceptes?";
                         break;
 
                     case 8: //Respuesta invitacion a partida en el caso del host
-
+                        MessageBox.Show(Encoding.ASCII.GetString(msg2));
                         string el = mensaje.Split('-')[0];
                         string yo = mensaje.Split('-')[1];
                         string resp = mensaje.Split('-')[2];
@@ -172,6 +173,22 @@ namespace WindowsFormsApplication1
 
                         }
                         
+                        break;
+
+                    case 9:
+                        if (mensaje == "SIPE")
+                        {
+                            MessageBox.Show("T'has registrat correctament");
+
+                            
+                        }
+
+                        else
+                        {
+                            MessageBox.Show("No t'has pogut registrar.");
+                            user.Text = null;
+                            password.Text = null;
+                        }
                         break;
 
                     case 10:
@@ -192,6 +209,14 @@ namespace WindowsFormsApplication1
                             
 
                         }
+                        break;
+
+                    case 15: //Mostrar mensajes del chat 
+                        string mensaje_chat = mensaje.Split('/')[0];
+                        int j = dataGridView_Chat.Rows.Add();
+                        dataGridView_Chat.Rows[j].Cells[0].Value = mensaje_chat;
+                        textBox_xat_partida.Text = "";
+
                         break;
                 }
             }
@@ -332,12 +357,32 @@ namespace WindowsFormsApplication1
 
         private void button_invitacionPartida_si_Click(object sender, EventArgs e)
         {
-
+            string mensaje = "8/" + minombre + "/" + sunombre + "/SI";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+            groupBox_invitacionPartida.Visible = false;
+           // groupBox_Chat.Visible = true;
         }
 
         private void groupBox1_invitar_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_invitacionPartida_NO_Click(object sender, EventArgs e)
+        {
+            string mensaje = "8/" + minombre + "/" + sunombre + "/NO";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+            groupBox_invitacionPartida.Visible = false;
+        }
+
+        private void enviat_btn_partida_Click(object sender, EventArgs e)
+        {
+            string mensaje = "15/" + textBox_xat_partida.Text;
+
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
         }
 
         private void label1_Click(object sender, EventArgs e)

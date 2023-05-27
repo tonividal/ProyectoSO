@@ -58,8 +58,9 @@
             this.button_invitacionPartida_si = new System.Windows.Forms.Button();
             this.label_invitacionPartida_name = new System.Windows.Forms.Label();
             this.groupBox_chat_partida = new System.Windows.Forms.GroupBox();
-            this.ChatdePartida = new System.Windows.Forms.DataGridView();
-            this.textBox_mensaje_partida = new System.Windows.Forms.TextBox();
+            this.dataGridView_Chat = new System.Windows.Forms.DataGridView();
+            this.Chat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.textBox_xat_partida = new System.Windows.Forms.TextBox();
             this.enviat_btn_partida = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -68,7 +69,7 @@
             this.groupBox1_invitar.SuspendLayout();
             this.groupBox_invitacionPartida.SuspendLayout();
             this.groupBox_chat_partida.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChatdePartida)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Chat)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
@@ -365,6 +366,7 @@
             this.button2_invitacionPartida_NO.TabIndex = 2;
             this.button2_invitacionPartida_NO.Text = "NO";
             this.button2_invitacionPartida_NO.UseVisualStyleBackColor = true;
+            this.button2_invitacionPartida_NO.Click += new System.EventHandler(this.button2_invitacionPartida_NO_Click);
             // 
             // button_invitacionPartida_si
             // 
@@ -388,8 +390,8 @@
             // groupBox_chat_partida
             // 
             this.groupBox_chat_partida.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.groupBox_chat_partida.Controls.Add(this.ChatdePartida);
-            this.groupBox_chat_partida.Controls.Add(this.textBox_mensaje_partida);
+            this.groupBox_chat_partida.Controls.Add(this.dataGridView_Chat);
+            this.groupBox_chat_partida.Controls.Add(this.textBox_xat_partida);
             this.groupBox_chat_partida.Controls.Add(this.enviat_btn_partida);
             this.groupBox_chat_partida.Location = new System.Drawing.Point(1098, 454);
             this.groupBox_chat_partida.Name = "groupBox_chat_partida";
@@ -398,26 +400,31 @@
             this.groupBox_chat_partida.TabStop = false;
             this.groupBox_chat_partida.Text = "xat";
             // 
-            // ChatdePartida
+            // dataGridView_Chat
             // 
-            this.ChatdePartida.AllowUserToAddRows = false;
-            this.ChatdePartida.AllowUserToDeleteRows = false;
-            this.ChatdePartida.BackgroundColor = System.Drawing.Color.White;
-            this.ChatdePartida.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ChatdePartida.Location = new System.Drawing.Point(28, 25);
-            this.ChatdePartida.Name = "ChatdePartida";
-            this.ChatdePartida.ReadOnly = true;
-            this.ChatdePartida.RowHeadersWidth = 62;
-            this.ChatdePartida.RowTemplate.Height = 28;
-            this.ChatdePartida.Size = new System.Drawing.Size(240, 150);
-            this.ChatdePartida.TabIndex = 0;
+            this.dataGridView_Chat.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_Chat.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Chat});
+            this.dataGridView_Chat.Location = new System.Drawing.Point(28, 25);
+            this.dataGridView_Chat.Name = "dataGridView_Chat";
+            this.dataGridView_Chat.RowHeadersWidth = 62;
+            this.dataGridView_Chat.RowTemplate.Height = 28;
+            this.dataGridView_Chat.Size = new System.Drawing.Size(229, 138);
+            this.dataGridView_Chat.TabIndex = 20;
             // 
-            // textBox_mensaje_partida
+            // Chat
             // 
-            this.textBox_mensaje_partida.Location = new System.Drawing.Point(28, 181);
-            this.textBox_mensaje_partida.Name = "textBox_mensaje_partida";
-            this.textBox_mensaje_partida.Size = new System.Drawing.Size(240, 26);
-            this.textBox_mensaje_partida.TabIndex = 1;
+            this.Chat.HeaderText = "";
+            this.Chat.MinimumWidth = 8;
+            this.Chat.Name = "Chat";
+            this.Chat.Width = 150;
+            // 
+            // textBox_xat_partida
+            // 
+            this.textBox_xat_partida.Location = new System.Drawing.Point(28, 181);
+            this.textBox_xat_partida.Name = "textBox_xat_partida";
+            this.textBox_xat_partida.Size = new System.Drawing.Size(240, 26);
+            this.textBox_xat_partida.TabIndex = 1;
             // 
             // enviat_btn_partida
             // 
@@ -427,6 +434,7 @@
             this.enviat_btn_partida.TabIndex = 2;
             this.enviat_btn_partida.Text = "ENVIAR";
             this.enviat_btn_partida.UseVisualStyleBackColor = true;
+            this.enviat_btn_partida.Click += new System.EventHandler(this.enviat_btn_partida_Click);
             // 
             // Form1
             // 
@@ -461,7 +469,7 @@
             this.groupBox_invitacionPartida.PerformLayout();
             this.groupBox_chat_partida.ResumeLayout(false);
             this.groupBox_chat_partida.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ChatdePartida)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Chat)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -498,9 +506,10 @@
         private System.Windows.Forms.Button button_invitacionPartida_si;
         private System.Windows.Forms.Label label_invitacionPartida_name;
         private System.Windows.Forms.GroupBox groupBox_chat_partida;
-        private System.Windows.Forms.DataGridView ChatdePartida;
-        private System.Windows.Forms.TextBox textBox_mensaje_partida;
+        private System.Windows.Forms.TextBox textBox_xat_partida;
         private System.Windows.Forms.Button enviat_btn_partida;
+        private System.Windows.Forms.DataGridView dataGridView_Chat;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Chat;
     }
 }
 

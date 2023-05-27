@@ -10,7 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
-int port=9050;
+int port=9010;
 int sockets[100];
 
 
@@ -62,12 +62,9 @@ void *AtenderCliente (void *socket)
 	
 	int i;
 	int terminar=0;
-<<<<<<< HEAD
-=======
-	char username[20];
-	char username2[20];
->>>>>>> 8e15ecc213ec22ef1ad13243a0e5794a288769b3
 	char password[20], stadio[20];
+	int s1, s2;
+	int idSQL=4;
 	// Atenderemos solo 10 peticiones
 	
 	
@@ -187,7 +184,7 @@ void *AtenderCliente (void *socket)
 					write (sock_conn, respuesta1, strlen(respuesta1));
 					
 					//Añadimos al usuario a la Lista de Conectados
-					int res = AnadirConectado(username, socket, &milista);
+					int res = AnadirConectado(username, sock_conn, &milista);
 					if (res==-1)
 						printf("La lista está llena\n");
 					else
@@ -217,6 +214,62 @@ void *AtenderCliente (void *socket)
 				
 				
 				write (sock_conn, respuesta1, strlen(respuesta1));
+			}
+			
+			else if (codigo == 2)
+			{
+				p = strtok (NULL, "/");
+				strcpy(password, p);
+				printf ("Codigo: %d, Nombre: %s, Password: %s\n", codigo, username, password);
+				MYSQL *conn;
+				int err;
+				MYSQL_RES *resultado;
+				MYSQL_ROW row;
+				char consulta [100];
+				conn = mysql_init(NULL);
+				if (conn == NULL) {
+					printf("Error al crear la conexion: %u %s\n",
+						   mysql_errno(conn), mysql_error(conn));
+					exit(1);
+				}
+				conn = mysql_real_connect (conn,  "localhost","root", "mysql", "game", 0, NULL, 0);
+				if (conn == NULL) {
+					printf("Error al inicializar la conexion: %u %s\n",
+						   mysql_errno(conn), mysql_error(conn));
+					exit(1);
+				}
+				idSQL=idSQL+1;
+				sprintf(consulta, "INSERT INTO JUGADOR VALUES ('%d','%s','%s')",idSQL, username, password);
+				err=mysql_query (conn, consulta);
+				if (err!=0) {
+					printf("Error al consultar datos de la base: %u %s\n",
+						   mysql_errno(conn), mysql_error(conn));
+					exit(1);
+				}
+				resultado = mysql_store_result (conn);
+				
+				
+				AnadirConectado(&milista, username, sock_conn);
+				//Lista de conectados
+				char conectados[512];
+				char notificacio[512];
+				conectados[0]= '\0';
+				DameConectados(&milista, conectados);
+				sprintf(notificacio,"6/%s", conectados);
+				strcpy(respuesta, notificacio);
+				
+				int j;
+				for(j=0; j<milista.num; j++)
+					write (sockets[j], respuesta, strlen(respuesta));
+				
+				
+				sprintf(respuesta1, "9/SIPE");
+				
+				write (sock_conn, respuesta1, strlen(respuesta1));
+				
+				mysql_close (conn);
+				
+				
 			}
 			
 			else if(codigo==3){//Â¿En quÃ© partidas ha participado el "Playertwo"?
@@ -252,19 +305,12 @@ void *AtenderCliente (void *socket)
 			}
 			
 			else if (codigo == 7){ // Invitar a otro jugador
-<<<<<<< HEAD
 				printf("Mensaje\n");
 				p = strtok (NULL, "/");
 				strcpy(username2, p);
 				sprintf (respuesta,"7/%s-%s",username,username2);
 				printf("%s\n",respuesta);
 				write (DameSocket(&milista, username2), respuesta, strlen(respuesta));
-=======
-				p = strtok (NULL, "/");
-				strcpy(username2, p);
-				sprintf (respuesta,"7/%s-%s",username,username2);
-				write (DameSocket(&milista,username), respuesta, strlen(respuesta));
->>>>>>> 8e15ecc213ec22ef1ad13243a0e5794a288769b3
 			}
 			
 			else if(codigo == 8)
@@ -274,10 +320,14 @@ void *AtenderCliente (void *socket)
 				
 				p = strtok (NULL, "/");
 				strcpy(resp, p);
+				
+				p = strtok (NULL, "/");
+				strcpy(resp, p);
 				if(strcmp(resp,"SI")==0)
 				{
 					int idP = AnadirPartida (miPartida,username,username2,DameSocket(&milista, username),DameSocket(&milista, username2));
 					sprintf (respuesta,"8/%s-%s-%s-%d",username2,username,resp,idP);
+					printf("%s\n",respuesta);
 					write (DameSocket(&milista, username), respuesta, strlen(respuesta));
 					sprintf (respuesta,"11/%s-%s-%s-%d",username,username2,resp,idP);
 					write (DameSocket(&milista, username2), respuesta, strlen(respuesta));
@@ -354,7 +404,20 @@ void *AtenderCliente (void *socket)
 				}
 				
 			}
+			
+			else if (codigo == 15)
+			{
+				s2 = DameSocket(&milista, username2);
+				p = strtok (NULL, "/");
+				char mensaje[200];
+				strcpy(mensaje, p);
+				sprintf (respuesta,"15/%s/",mensaje);
 				
+				write (s2, respuesta, strlen(respuesta));
+				write (s1, respuesta, strlen(respuesta));
+			}
+			
+			
 		}
 		
 }
