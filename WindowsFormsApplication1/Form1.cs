@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9010;
+        int port = 9060;
         int color;
         List<string> pdas = new List<string>();
 
@@ -110,30 +110,54 @@ namespace WindowsFormsApplication1
                          }
                          break;*/
                     case 6:    //lista de conectados
-                         string[] listaconectados = mensaje.Split('/');
-                         int numerodeconectados = Convert.ToInt32(listaconectados[0]);
+                        DataTable dt = new DataTable();
+                        dt.Columns.Add("Conectados", typeof(string));
 
-                         if (dataGridView1.InvokeRequired)
+
+                        for (int i = 0; i < trozos.Length - 2; i++)
+                        {
+                            trozos[i] = trozos[i + 1];
+                        }
+
+
+
+                        foreach (string nombre in trozos)
+                        {
+                            DataRow row = dt.NewRow();
+                            row["Conectados"] = nombre;
+                            dt.Rows.Add(row);
+                        }
+                        this.Invoke(new Action(() =>
+                        {
+                            ListaConectados.DataSource = dt;
+                            ListaConectados.Refresh();
+                        }));
+                        /* string[] listaconectados = mensaje.Split('/');
+                         int numerodeconectados = Convert.ToInt32(listaconectados[0]);
+                         
+
+                        if (dataGridView1.InvokeRequired)
                          {
                              dataGridView1.Invoke(new MethodInvoker(delegate
                              {
-                                 dataGridView1.ColumnCount = 2;
+                                 dataGridView1.ColumnCount = 1;
                              }));
                          }
                          else
                          {
-                             dataGridView1.ColumnCount = 2;
+                             dataGridView1.ColumnCount = 1;
                          }
 
                          dataGridView1.RowCount = numerodeconectados;
 
 
-                       for (int i = 0; i < numerodeconectados + 1 && i < listaconectados.Length; i++)
+
+                        for (int i = 0; i < numerodeconectados + 1 && i < listaconectados.Length; i++)
                        {
-                           dataGridView1.Rows.Add(1);
+                           //dataGridView1.Rows.Add(2);
                            dataGridView1.Rows[i].Cells[0].Value = listaconectados[i];
 
-                       }
+                       }*/
                        break;
 
 
@@ -176,19 +200,8 @@ namespace WindowsFormsApplication1
                         break;
 
                     case 9:
-                        if (mensaje == "SIPE")
-                        {
-                            MessageBox.Show("T'has registrat correctament");
-
-                            
-                        }
-
-                        else
-                        {
-                            MessageBox.Show("No t'has pogut registrar.");
-                            user.Text = null;
-                            password.Text = null;
-                        }
+                        MessageBox.Show("Registrat correctament");
+                        MessageBox.Show("Clica 'Entrar' per continuar");
                         break;
 
                     case 10:
@@ -214,10 +227,16 @@ namespace WindowsFormsApplication1
                     case 15: //Mostrar mensajes del chat 
                         string mensaje_chat = mensaje.Split('/')[0];
                         int j = dataGridView_Chat.Rows.Add();
-                        dataGridView_Chat.Rows[j].Cells[0].Value = mensaje_chat;
-                        textBox_xat_partida.Text = "";
+                        this.Invoke(new Action(() =>
+                        {
+                            dataGridView_Chat.Rows[j].Cells[0].Value = trozos[1];
+                        }));
+                       // dataGridView_Chat.Rows[j].Cells[0].Value = mensaje_chat;
+                     //   textBox_xat_partida.Text = "";
 
                         break;
+
+                        Array.Clear(trozos, 0, trozos.Length);
                 }
             }
         }
@@ -264,12 +283,14 @@ namespace WindowsFormsApplication1
 
         private void button4_Click(object sender, EventArgs e)
         {
+
             string mensaje = "2/" + user.Text + "/" + password.Text;
-            // Enviamos al servidor el user y contraseña tecleados
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
 
-        }
+        }  
+
+    
         private void button2_Click(object sender, EventArgs e)
         {
             if (partidas.Checked)

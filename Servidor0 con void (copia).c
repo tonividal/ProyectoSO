@@ -10,7 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
-int port=9010;
+int port=9060;
 int sockets[100];
 
 
@@ -55,7 +55,9 @@ void *AtenderCliente (void *socket)
 	int ret;
 	int numForm;
 	int idPartida;
+	int idSQL;
 	char resp[20];
+//	char error[50];
 	char frase[100];
 	int sock_listen;
 	struct sockaddr_in serv_adr;
@@ -64,7 +66,7 @@ void *AtenderCliente (void *socket)
 	int terminar=0;
 	char password[20], stadio[20];
 	int s1, s2;
-	int idSQL=4;
+	//int idSQL=4;
 	// Atenderemos solo 10 peticiones
 	
 	
@@ -203,7 +205,7 @@ void *AtenderCliente (void *socket)
 					DameConectados(&milista, notifi);
 					sprintf(notifi2, "6/%s", notifi);
 					//bucle para mandar notificacion(for hecho en clase)
-					for(j=0;j<200;j++){
+					for(j=0;j<milista.num;j++){
 						write(sockets[j], notifi2, strlen(notifi2));
 						
 					}
@@ -218,6 +220,8 @@ void *AtenderCliente (void *socket)
 			
 			else if (codigo == 2)
 			{
+				p = strtok( NULL, "/");
+				strcpy (username, p);
 				p = strtok (NULL, "/");
 				strcpy(password, p);
 				printf ("Codigo: %d, Nombre: %s, Password: %s\n", codigo, username, password);
@@ -238,7 +242,18 @@ void *AtenderCliente (void *socket)
 						   mysql_errno(conn), mysql_error(conn));
 					exit(1);
 				}
-				idSQL=idSQL+1;
+				sprintf (respuesta, "SELECT JUGADOR.ID FROM JUGADOR WHERE JUGADOR.ID = (SELECT MAX(JUGADOR.ID) FROM JUGADOR)");
+				err=mysql_query (conn, respuesta);
+				if (err!=0) {
+					printf ("Error al consultar datos de la base %u %s\n",
+							mysql_errno(conn), mysql_error(conn));
+					
+					exit (1);
+				}
+				resultado = mysql_store_result(conn);
+				row = mysql_fetch_row (resultado);
+				idSQL = atoi(row[0]);
+				idSQL = idSQL + 1;
 				sprintf(consulta, "INSERT INTO JUGADOR VALUES ('%d','%s','%s')",idSQL, username, password);
 				err=mysql_query (conn, consulta);
 				if (err!=0) {
@@ -247,31 +262,9 @@ void *AtenderCliente (void *socket)
 					exit(1);
 				}
 				resultado = mysql_store_result (conn);
-				
-				
-				AnadirConectado(&milista, username, sock_conn);
-				//Lista de conectados
-				char conectados[512];
-				char notificacio[512];
-				conectados[0]= '\0';
-				DameConectados(&milista, conectados);
-				sprintf(notificacio,"6/%s", conectados);
-				strcpy(respuesta, notificacio);
-				
-				int j;
-				for(j=0; j<milista.num; j++)
-					write (sockets[j], respuesta, strlen(respuesta));
-				
-				
-				sprintf(respuesta1, "9/SIPE");
-				
-				write (sock_conn, respuesta1, strlen(respuesta1));
-				
+				write(sock_conn, "9/",strlen("9/"));
 				mysql_close (conn);
-				
-				
 			}
-			
 			else if(codigo==3){//¿En qué partidas ha participado el "Playertwo"?
 				p = strtok( NULL, "/");
 				strcpy (username, p);
@@ -422,6 +415,27 @@ void *AtenderCliente (void *socket)
 		
 }
 
+/*int BuscarRegistrados(MYSQL *conn){
+	int err;
+	MYSQL_RES *resultado;
+	MYSQL_ROW row;
+	sprintf(consulta,"SELECT jugadores.usuario FROM jugadores WHERE JUGADOR.USERNAME = '%s'",username);
+	err=mysql_query(conn, str_query);
+	if (err!=0)
+	{
+		printf ("Error al consultar datos de la base para la id: %u %s \n", mysql_errno(conn), mysql_error(conn));
+	}
+	
+	resultado = mysql_store_result (conn);
+	row =mysql_fetch_row(resultado);
+	
+	if(row !=NULL){
+		return -1;
+	}			
+	else{
+		return 0;
+	}
+}*/
 
 int AnadirConectado(char nombre[20], int socket, ListaConectados *lista)
 {
@@ -513,9 +527,9 @@ int EliminarConectado(char nombre[20],ListaConectados *lista)
 }
 void DameConectados(ListaConectados *milista, char resultado[200])
 {
-	sprintf(resultado,"%d/",milista->num);
+	//sprintf(resultado,"%d/",milista->num);
 	int i;
-	for(i = 0; i < milista->num; i++){
+	for(i = 0; i != milista->num; i++){
 		sprintf(resultado,"%s%s/",resultado,milista->conectados[i].nombre);
 	}
 }

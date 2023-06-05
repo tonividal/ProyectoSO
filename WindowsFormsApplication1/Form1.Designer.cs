@@ -48,7 +48,8 @@
             this.password = new System.Windows.Forms.TextBox();
             this.user = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.lista_Conectados = new System.Windows.Forms.ListBox();
+            this.ListaConectados = new System.Windows.Forms.DataGridView();
             this.contLbl = new System.Windows.Forms.Label();
             this.button6 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -65,7 +66,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ListaConectados)).BeginInit();
             this.groupBox1_invitar.SuspendLayout();
             this.groupBox_invitacionPartida.SuspendLayout();
             this.groupBox_chat_partida.SuspendLayout();
@@ -282,7 +283,8 @@
             // groupBox3
             // 
             this.groupBox3.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.groupBox3.Controls.Add(this.dataGridView1);
+            this.groupBox3.Controls.Add(this.lista_Conectados);
+            this.groupBox3.Controls.Add(this.ListaConectados);
             this.groupBox3.Location = new System.Drawing.Point(708, 158);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox3.Name = "groupBox3";
@@ -292,19 +294,28 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Llistat";
             // 
-            // dataGridView1
+            // lista_Conectados
             // 
-            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.GridColor = System.Drawing.SystemColors.Control;
-            this.dataGridView1.Location = new System.Drawing.Point(36, 249);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(270, 188);
-            this.dataGridView1.TabIndex = 13;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.lista_Conectados.FormattingEnabled = true;
+            this.lista_Conectados.ItemHeight = 20;
+            this.lista_Conectados.Location = new System.Drawing.Point(112, 141);
+            this.lista_Conectados.Name = "lista_Conectados";
+            this.lista_Conectados.Size = new System.Drawing.Size(120, 84);
+            this.lista_Conectados.TabIndex = 18;
+            // 
+            // ListaConectados
+            // 
+            this.ListaConectados.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.ListaConectados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ListaConectados.GridColor = System.Drawing.SystemColors.Control;
+            this.ListaConectados.Location = new System.Drawing.Point(36, 249);
+            this.ListaConectados.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ListaConectados.Name = "ListaConectados";
+            this.ListaConectados.RowHeadersWidth = 51;
+            this.ListaConectados.RowTemplate.Height = 24;
+            this.ListaConectados.Size = new System.Drawing.Size(270, 188);
+            this.ListaConectados.TabIndex = 13;
+            this.ListaConectados.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
             // contLbl
             // 
@@ -462,7 +473,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ListaConectados)).EndInit();
             this.groupBox1_invitar.ResumeLayout(false);
             this.groupBox1_invitar.PerformLayout();
             this.groupBox_invitacionPartida.ResumeLayout(false);
@@ -496,7 +507,7 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView ListaConectados;
         private System.Windows.Forms.Label contLbl;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.TextBox textBox1;
@@ -510,6 +521,7 @@
         private System.Windows.Forms.Button enviat_btn_partida;
         private System.Windows.Forms.DataGridView dataGridView_Chat;
         private System.Windows.Forms.DataGridViewTextBoxColumn Chat;
+        private System.Windows.Forms.ListBox lista_Conectados;
     }
 }
 
