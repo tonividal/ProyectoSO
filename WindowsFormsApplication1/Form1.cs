@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9060;
+        int port = 9020;
         int color;
         List<string> pdas = new List<string>();
 
@@ -113,13 +113,13 @@ namespace WindowsFormsApplication1
                         DataTable dt = new DataTable();
                         dt.Columns.Add("Conectados", typeof(string));
 
-
-                        for (int i = 0; i < trozos.Length - 2; i++)
+                        int i = 0;
+                        for (i = 0; i < trozos.Length - 2; i++)
                         {
                             trozos[i] = trozos[i + 1];
                         }
 
-
+                        Array.Resize(ref trozos, i);
 
                         foreach (string nombre in trozos)
                         {

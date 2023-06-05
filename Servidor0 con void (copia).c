@@ -10,7 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
-int port=9060;
+int port=9020;
 int sockets[100];
 
 
@@ -215,7 +215,7 @@ void *AtenderCliente (void *socket)
 				}
 				
 				
-				write (sock_conn, respuesta1, strlen(respuesta1));
+				//write (sock_conn, respuesta1, strlen(respuesta1));
 			}
 			
 			else if (codigo == 2)
