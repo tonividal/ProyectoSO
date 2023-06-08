@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9060;
+        int port = 9070;
         int color;
         List<string> pdas = new List<string>();
 
@@ -31,8 +31,18 @@ namespace WindowsFormsApplication1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
-           
+            groupBox1.Visible = false;
+            groupBoxLogin.Visible = false;
+            groupBox_chat_partida.Visible = false;
+            groupBox3.Visible = false;
+            groupBox_aceptarinvitacion.Visible = false;
+            buttonConectar.Visible = true;
+            buttonDesconectar.Visible = false;
+            contLbl.Visible = false;
+            groupBox1_invitar.Visible = false;
+            pictureBoxGameBase.Visible = false;
+            pictureBoxLogo.Visible = false;
+            labelBEnvingut.Visible = false;
         }
 
         public void CoMen(string mensaje)
@@ -243,6 +253,12 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
+            password.Text = "";
+            buttonDesconectar.Visible = true;
+            buttonConectar.Visible = false;
+            groupBoxLogin.Visible = true;
+
+
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
@@ -272,6 +288,20 @@ namespace WindowsFormsApplication1
         }
         private void button5_Click(object sender, EventArgs e)
         {
+            labelBEnvingut.Text = "Benvingut/da";
+            labelBEnvingut.Visible = true;
+            groupBox1.Visible = true;
+            groupBoxLogin.Visible = false;
+            groupBox_chat_partida.Visible = true;
+            groupBox3.Visible = true;
+            groupBox_aceptarinvitacion.Visible = true;
+            //buttonConectar.Visible = false;
+            //buttonDesconectar.Visible = false;
+            //contLbl.Visible = false;
+            groupBox1_invitar.Visible = true;
+            pictureBoxGameBase.Visible = true;
+            pictureBoxLogo.Visible = true;
+
             string mensaje = "1/" + user.Text + "/" + password.Text;
             // Enviamos al servidor el user y contraseña tecleados
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
@@ -334,6 +364,19 @@ namespace WindowsFormsApplication1
 
         private void button3_Click(object sender, EventArgs e)
         {
+            groupBox1.Visible = false;
+            groupBoxLogin.Visible = false;
+            groupBox_chat_partida.Visible = false;
+            groupBox3.Visible = false;
+            groupBox_aceptarinvitacion.Visible = false;
+            buttonConectar.Visible = true;
+            buttonDesconectar.Visible = false;
+            contLbl.Visible = false;
+            groupBox1_invitar.Visible = false;
+            pictureBoxGameBase.Visible = false;
+            pictureBoxLogo.Visible = false;
+            labelBEnvingut.Visible = false;
+
             //Mensaje de desconexión
             string mensaje = "0/";
         
@@ -381,7 +424,7 @@ namespace WindowsFormsApplication1
             string mensaje = "8/" + minombre + "/" + sunombre + "/SI";
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
-            groupBox_invitacionPartida.Visible = false;
+            groupBox_aceptarinvitacion.Visible = false;
            // groupBox_Chat.Visible = true;
         }
 
@@ -395,7 +438,7 @@ namespace WindowsFormsApplication1
             string mensaje = "8/" + minombre + "/" + sunombre + "/NO";
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
-            groupBox_invitacionPartida.Visible = false;
+            groupBox_aceptarinvitacion.Visible = false;
         }
 
         private void enviat_btn_partida_Click(object sender, EventArgs e)
