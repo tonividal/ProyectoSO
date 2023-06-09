@@ -17,10 +17,10 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9020;
+        int port = 9070;
         int color;
         List<string> pdas = new List<string>();
-
+        //string jert;
 
         string minombre, sunombre;
         public Form1()
@@ -38,11 +38,16 @@ namespace WindowsFormsApplication1
             groupBox_aceptarinvitacion.Visible = false;
             buttonConectar.Visible = true;
             buttonDesconectar.Visible = false;
-            contLbl.Visible = false;
+            label5.Visible = false;
             groupBox1_invitar.Visible = false;
             pictureBoxGameBase.Visible = false;
             pictureBoxLogo.Visible = false;
             labelBEnvingut.Visible = false;
+            radioButton1.Visible = false;
+            radioButton2.Visible = false;
+            radioButton3.Visible = false;
+            radioButton4.Visible = false;
+
         }
 
         public void CoMen(string mensaje)
@@ -55,7 +60,7 @@ namespace WindowsFormsApplication1
 
         private void PonContador(string mensaje)
         {
-            contLbl.Text = mensaje;
+            label5.Text = mensaje;
         }
 
         private void AtenderServidor()
@@ -69,13 +74,19 @@ namespace WindowsFormsApplication1
                 int codigo = Convert.ToInt32(trozos[0]);
                 string mensaje = mensaje = trozos[1].Split('\0')[0];
                 //MessageBox.Show(Encoding.ASCII.GetString(msg2));
+                string mensajeJ = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                string[] respuesta;
+                respuesta = mensajeJ.Split('/');
 
                 switch (codigo)
                 {
                     case 1:  // respuesta a conectar
 
                         if (mensaje == "SI")
+                        {
                             MessageBox.Show("Ok, has entrat");
+                            label5.Text = user.Text;
+                        }
                         else
                             MessageBox.Show("credencials incorrectes.");
                         break;
@@ -202,8 +213,12 @@ namespace WindowsFormsApplication1
                         MessageBox.Show(el + " ha dicho: " + resp);
                         if (resp == "SI")
                         {
-                           
-                          
+                            radioButton1.Visible = true;
+                            radioButton2.Visible = true;
+                            radioButton3.Visible = true;
+                            radioButton4.Visible = true;
+                            MessageBox.Show("Iniciant la partida, et toca xutar " + minombre);
+                            string jert = "xutador";
 
                         }
                         
@@ -229,20 +244,22 @@ namespace WindowsFormsApplication1
                         MessageBox.Show(el2 + " ha dicho: " + resp2);
                         if (resp2 == "SI")
                         {
-                            
+                            radioButton1.Visible = true;
+                            radioButton2.Visible = true;
+                            radioButton3.Visible = true;
+                            radioButton4.Visible = true;
+                            MessageBox.Show("Iniciant la partida, ets el porter" + sunombre);
+                            string jert = "porter";
 
                         }
+
                         break;
 
                     case 15: //Mostrar mensajes del chat 
-                        string mensaje_chat = mensaje.Split('/')[0];
-                        int j = dataGridView_Chat.Rows.Add();
                         this.Invoke(new Action(() =>
                         {
-                            dataGridView_Chat.Rows[j].Cells[0].Value = trozos[1];
+                            xat.AppendText(respuesta[1] + ": " + respuesta[2] + Environment.NewLine);
                         }));
-                       // dataGridView_Chat.Rows[j].Cells[0].Value = mensaje_chat;
-                     //   textBox_xat_partida.Text = "";
 
                         break;
 
@@ -257,6 +274,8 @@ namespace WindowsFormsApplication1
             buttonDesconectar.Visible = true;
             buttonConectar.Visible = false;
             groupBoxLogin.Visible = true;
+            
+
 
 
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
@@ -301,6 +320,7 @@ namespace WindowsFormsApplication1
             groupBox1_invitar.Visible = true;
             pictureBoxGameBase.Visible = true;
             pictureBoxLogo.Visible = true;
+            label5.Visible = true;
 
             string mensaje = "1/" + user.Text + "/" + password.Text;
             // Enviamos al servidor el user y contraseña tecleados
@@ -371,11 +391,16 @@ namespace WindowsFormsApplication1
             groupBox_aceptarinvitacion.Visible = false;
             buttonConectar.Visible = true;
             buttonDesconectar.Visible = false;
-            contLbl.Visible = false;
+            label5.Visible = false;
             groupBox1_invitar.Visible = false;
             pictureBoxGameBase.Visible = false;
             pictureBoxLogo.Visible = false;
             labelBEnvingut.Visible = false;
+            radioButton1.Visible = false;
+            radioButton2.Visible = false;
+            radioButton3.Visible = false;
+            radioButton4.Visible = false;
+
 
             //Mensaje de desconexión
             string mensaje = "0/";
@@ -417,6 +442,7 @@ namespace WindowsFormsApplication1
             string mensaje = "7/" + textBox1.Text;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
+
         }
 
         private void button_invitacionPartida_si_Click(object sender, EventArgs e)
@@ -425,7 +451,8 @@ namespace WindowsFormsApplication1
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
             groupBox_aceptarinvitacion.Visible = false;
-           // groupBox_Chat.Visible = true;
+            
+            // groupBox_Chat.Visible = true;
         }
 
         private void groupBox1_invitar_Enter(object sender, EventArgs e)
@@ -443,10 +470,96 @@ namespace WindowsFormsApplication1
 
         private void enviat_btn_partida_Click(object sender, EventArgs e)
         {
-            string mensaje = "15/" + textBox_xat_partida.Text;
+            xat.AppendText("Tu: " + textBox_xat_partida.Text + Environment.NewLine);
+            string mensaje = "15/" + label5.Text + "/" + textBox_xat_partida.Text;
+
 
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            this.Invoke(new Action(() =>
+            {
+                if (minombre == label5.Text)
+                {
+                    string mensaje = "30/dd";
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    server.Send(msg);
+                }
+
+                else
+                {
+                    string mensaje = "31/dd";
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    server.Send(msg);
+                }
+            }));
+           /* if (minombre == label5.Text)
+            {
+                string mensaje = "30/dd";
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+
+            else
+            {
+                string mensaje = "31/dd";
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }*/
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (minombre == "xutador")
+            {
+                string mensaje = "30/de";
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+
+            else
+            {
+                string mensaje = "31/de";
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (minombre == label5.Text)
+            {
+                string mensaje = "30/be";
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+
+            else
+            {
+                string mensaje = "31/be";
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (minombre == label5.Text)
+            {
+                string mensaje = "30/bd";
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+
+            else
+            {
+                string mensaje = "31/bd";
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
         }
 
         private void label1_Click(object sender, EventArgs e)

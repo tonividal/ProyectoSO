@@ -10,7 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
-int port=9020;
+int port=9070;
 int sockets[100];
 
 
@@ -57,6 +57,8 @@ void *AtenderCliente (void *socket)
 	int idPartida;
 	int idSQL;
 	char resp[20];
+	char notifi[200];
+	char notifi2[200];
 //	char error[50];
 	char frase[100];
 	int sock_listen;
@@ -121,7 +123,15 @@ void *AtenderCliente (void *socket)
 				
 				terminar = 1;
 				
-				int j;
+				DameConectados(&milista, notifi);
+				
+				sprintf(notifi2, "6/%s", notifi);
+				
+				for(int i = 0; i<milista.num;i++){
+					write(milista.conectados[i].socket,notifi2,sizeof(notifi2));
+				}
+				
+				/*int j;
 				char notifi[200];
 				char notifi2[200];
 				DameConectados(&milista, notifi);
@@ -133,7 +143,7 @@ void *AtenderCliente (void *socket)
 				}
 				printf("Resultado:'%s'\n", notifi);
 				printf("Resultado:'%s'\n", notifi2);
-				
+				*/
 			}
 			
 			
@@ -400,14 +410,24 @@ void *AtenderCliente (void *socket)
 			
 			else if (codigo == 15)
 			{
-				s2 = DameSocket(&milista, username2);
+				
+				//s2 = DameSocket(&milista, username2);
+				p = strtok (NULL, "/");
+				char nombre[20];
+				strcpy(nombre, p);
 				p = strtok (NULL, "/");
 				char mensaje[200];
 				strcpy(mensaje, p);
-				sprintf (respuesta,"15/%s/",mensaje);
+				sprintf (respuesta,"15/%s/%s/",nombre, mensaje);
 				
-				write (s2, respuesta, strlen(respuesta));
-				write (s1, respuesta, strlen(respuesta));
+				for(int i=0; i<milista.num; i++){
+					if(milista.conectados[i].socket!=sock_conn)
+						write (milista.conectados[i].socket, respuesta, sizeof(respuesta));
+					
+				}
+				
+				//write (s2, respuesta, strlen(respuesta));
+				//write (s1, respuesta, strlen(respuesta));
 			}
 			
 			
@@ -515,11 +535,14 @@ int EliminarConectado(char nombre[20],ListaConectados *lista)
 	else{
 		int i;
 		for(i = pos; i < lista -> num; i++){
-			pthread_mutex_lock(&mutex);
+			lista->conectados[i] = lista->conectados[i+1];
+			lista->num = (lista->num)-1;
+			
+			/*pthread_mutex_lock(&mutex);
 			lista->conectados[i].socket = lista->conectados[i+1].socket;
 			strcpy(lista->conectados[i].nombre,lista->conectados[i+1].nombre);
 			lista->num = lista->num -1;
-			pthread_mutex_unlock(&mutex);
+			pthread_mutex_unlock(&mutex);*/
 		}
 		return 0;
 		
@@ -527,6 +550,7 @@ int EliminarConectado(char nombre[20],ListaConectados *lista)
 }
 void DameConectados(ListaConectados *milista, char resultado[200])
 {
+	
 	//sprintf(resultado,"%d/",milista->num);
 	int i;
 	for(i = 0; i != milista->num; i++){
