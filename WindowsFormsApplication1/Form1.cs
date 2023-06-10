@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9070;
+        int port = 9050;
         int color;
         List<string> pdas = new List<string>();
         //string jert;
@@ -47,6 +47,10 @@ namespace WindowsFormsApplication1
             radioButton2.Visible = false;
             radioButton3.Visible = false;
             radioButton4.Visible = false;
+            radioButton5.Visible = false;
+            radioButton6.Visible = false;
+            radioButton7.Visible = false;
+            radioButton8.Visible = false;
 
         }
 
@@ -211,14 +215,15 @@ namespace WindowsFormsApplication1
                         int idP = Convert.ToInt32(mensaje.Split('-')[3]);
                         this.color = 0;
                         MessageBox.Show(el + " ha dicho: " + resp);
-                        if (resp == "SI")
+                        string jert = "xutador";
+                        if (resp == "SI" && jert == "xutador")
                         {
                             radioButton1.Visible = true;
                             radioButton2.Visible = true;
                             radioButton3.Visible = true;
                             radioButton4.Visible = true;
                             MessageBox.Show("Iniciant la partida, et toca xutar " + minombre);
-                            string jert = "xutador";
+                            
 
                         }
                         
@@ -242,16 +247,20 @@ namespace WindowsFormsApplication1
                         int idP2 = Convert.ToInt32(mensaje.Split('-')[3]);
                         this.color = 1;
                         MessageBox.Show(el2 + " ha dicho: " + resp2);
-                        if (resp2 == "SI")
+                        jert = "porter";
+                        if (resp2 == "SI" && jert == "porter")
                         {
-                            radioButton1.Visible = true;
-                            radioButton2.Visible = true;
-                            radioButton3.Visible = true;
-                            radioButton4.Visible = true;
+
+                            radioButton5.Visible = true;
+                            radioButton6.Visible = true;
+                            radioButton7.Visible = true;
+                            radioButton8.Visible = true;
+
                             MessageBox.Show("Iniciant la partida, ets el porter" + sunombre);
-                            string jert = "porter";
+                            
 
                         }
+                        
 
                         break;
 
@@ -402,6 +411,7 @@ namespace WindowsFormsApplication1
             radioButton4.Visible = false;
 
 
+
             //Mensaje de desconexión
             string mensaje = "0/";
         
@@ -480,22 +490,12 @@ namespace WindowsFormsApplication1
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            this.Invoke(new Action(() =>
-            {
-                if (minombre == label5.Text)
-                {
-                    string mensaje = "30/dd";
+            
+                    string mensaje = "30/x/dd";
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                     server.Send(msg);
-                }
-
-                else
-                {
-                    string mensaje = "31/dd";
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-                    server.Send(msg);
-                }
-            }));
+                
+            
            /* if (minombre == label5.Text)
             {
                 string mensaje = "30/dd";
@@ -513,53 +513,61 @@ namespace WindowsFormsApplication1
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            if (minombre == "xutador")
-            {
-                string mensaje = "30/de";
+            
+                string mensaje = "30/x/de/";
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-            }
-
-            else
-            {
-                string mensaje = "31/de";
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-                server.Send(msg);
-            }
+           
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
         {
-            if (minombre == label5.Text)
-            {
-                string mensaje = "30/be";
+          
+                string mensaje = "30/x/be/";
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-            }
-
-            else
-            {
-                string mensaje = "31/be";
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-                server.Send(msg);
-            }
+            
         }
 
         private void radioButton4_CheckedChanged(object sender, EventArgs e)
         {
-            if (minombre == label5.Text)
-            {
-                string mensaje = "30/bd";
+            
+                string mensaje = "30/x/bd/";
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-            }
+            
+        }
 
-            else
-            {
-                string mensaje = "31/bd";
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-                server.Send(msg);
-            }
+        private void radioButton5_CheckedChanged(object sender, EventArgs e)
+        {
+            string mensaje = "30/p/dd/";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+
+        }
+
+        private void radioButton8_CheckedChanged(object sender, EventArgs e)
+        {
+            string mensaje = "30/p/bd/";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+
+        }
+
+        private void radioButton7_CheckedChanged(object sender, EventArgs e)
+        {
+            string mensaje = "30/p/de/";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+
+        }
+
+        private void radioButton6_CheckedChanged(object sender, EventArgs e)
+        {
+            string mensaje = "30/p/be/";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+
         }
 
         private void label1_Click(object sender, EventArgs e)

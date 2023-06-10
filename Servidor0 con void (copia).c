@@ -10,7 +10,7 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
-int port=9070;
+int port=9050;
 int sockets[100];
 
 
@@ -59,6 +59,8 @@ void *AtenderCliente (void *socket)
 	char resp[20];
 	char notifi[200];
 	char notifi2[200];
+	char tiro[2];
+	char parada[2];
 //	char error[50];
 	char frase[100];
 	int sock_listen;
@@ -430,6 +432,43 @@ void *AtenderCliente (void *socket)
 				//write (s1, respuesta, strlen(respuesta));
 			}
 			
+			else if (codigo == 30){ 
+				p = strtok (NULL, "/");
+				char rol[1];
+				strcpy(rol, p);
+				
+				
+				
+				if(strcmp(rol,"x")==0)
+				{
+					
+					p = strtok (NULL, "/");
+					strcpy(tiro, p);
+					
+				}
+				
+				else{
+				  
+					
+					p = strtok (NULL, "/");
+					strcpy(parada, p);
+				}	
+				
+				if(tiro!="" && parada!=""){
+					
+					if(strcmp(tiro, parada)==0){
+					sprintf(respuesta, "30/Parada!");
+					write (DameSocket(&milista, username), respuesta, sizeof(respuesta));
+					write (DameSocket(&milista, username2), respuesta, sizeof(respuesta));
+				}
+				
+					else{
+					sprintf(respuesta, "30/GOL!");
+					write (DameSocket(&milista, username), respuesta, sizeof(respuesta));
+					write (DameSocket(&milista, username2), respuesta, sizeof(respuesta));
+				}
+				}
+			}
 			
 		}
 		
