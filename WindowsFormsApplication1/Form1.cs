@@ -13,12 +13,17 @@ using System.Threading;
 
 namespace WindowsFormsApplication1
 {
+  
     public partial class Form1 : Form
     {
         Socket server;
         Thread atender;
-        int port = 9050;
+        int port = 9075;
         int color;
+
+        int gols = 0;
+        int parades = 0;
+
         List<string> pdas = new List<string>();
         //string jert;
 
@@ -27,6 +32,7 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -36,6 +42,7 @@ namespace WindowsFormsApplication1
             groupBox_chat_partida.Visible = false;
             groupBox3.Visible = false;
             groupBox_aceptarinvitacion.Visible = false;
+            gBMarcador.Visible = false;
             buttonConectar.Visible = true;
             buttonDesconectar.Visible = false;
             label5.Visible = false;
@@ -136,7 +143,7 @@ namespace WindowsFormsApplication1
                          break;*/
                     case 6:    //lista de conectados
                         DataTable dt = new DataTable();
-                        dt.Columns.Add("Conectados", typeof(string));
+                        dt.Columns.Add("Jugadors actius", typeof(string));
 
                         int i = 0;
                         for (i = 0; i < trozos.Length - 2; i++)
@@ -149,7 +156,7 @@ namespace WindowsFormsApplication1
                         foreach (string nombre in trozos)
                         {
                             DataRow row = dt.NewRow();
-                            row["Conectados"] = nombre;
+                            row["Jugadors actius"] = nombre;
                             dt.Rows.Add(row);
                         }
                         this.Invoke(new Action(() =>
@@ -200,21 +207,25 @@ namespace WindowsFormsApplication1
 
                        
                     case 7: //Invitacion a partida
-                        MessageBox.Show(Encoding.ASCII.GetString(msg2));
+                        //MessageBox.Show(Encoding.ASCII.GetString(msg2));
                         //groupBox_invitacionPartida.Visible = true;
+                        MessageBox.Show("Sol·licitud enviada");
                         minombre = mensaje.Split('-')[0];
                         sunombre = mensaje.Split('-')[1];
-                        label_invitacionPartida_name.Text = minombre + " et convida a una partida, acceptes?";
+                        groupBox_aceptarinvitacion.Visible = true;
+                        label_invitacionPartida_name.Text = minombre + " et convida a una partida";
                         break;
 
                     case 8: //Respuesta invitacion a partida en el caso del host
-                        MessageBox.Show(Encoding.ASCII.GetString(msg2));
+                            // MessageBox.Show(Encoding.ASCII.GetString(msg2));
+                       // MessageBox.Show("Sol·licitud enviada");
                         string el = mensaje.Split('-')[0];
                         string yo = mensaje.Split('-')[1];
                         string resp = mensaje.Split('-')[2];
                         int idP = Convert.ToInt32(mensaje.Split('-')[3]);
                         this.color = 0;
-                        MessageBox.Show(el + " ha dicho: " + resp);
+                        MessageBox.Show(el + " ha dit: " + resp);
+                        
                         string jert = "xutador";
                         if (resp == "SI" && jert == "xutador")
                         {
@@ -222,8 +233,9 @@ namespace WindowsFormsApplication1
                             radioButton2.Visible = true;
                             radioButton3.Visible = true;
                             radioButton4.Visible = true;
-                            MessageBox.Show("Iniciant la partida, et toca xutar " + minombre);
-                            
+                            MessageBox.Show("Iniciant la partida, et toca xutar "  );
+                            MessageBox.Show("El joc consta de 5 penals. " + "Si marques 3 gols guanyes.");
+
 
                         }
                         
@@ -257,7 +269,8 @@ namespace WindowsFormsApplication1
                             radioButton8.Visible = true;
 
                             MessageBox.Show("Iniciant la partida, ets el porter" + sunombre);
-                            
+                            MessageBox.Show("El joc consta de 5 penals. " + "Si n'atures 3 guanyes.");
+
 
                         }
                         
@@ -272,6 +285,69 @@ namespace WindowsFormsApplication1
 
                         break;
 
+                    case 30:
+                        
+                        int total = gols + parades;
+                        if (total!=5)
+                        {
+                            if (mensaje == "gol")
+                            {
+                                //MessageBox.Show("GOL");
+                                labelesq.Text = "GOL";
+                                labeldreta.Text = " ";
+                                gols =( gols + 1);
+                               
+                                labelGols.Text = "" + gols;
+
+                              /*  radioButton1.Checked = false;
+                                radioButton2.Checked = false;
+                                radioButton3.Checked = false;
+                                radioButton4.Checked = false;
+                                radioButton5.Checked = false;
+                                radioButton6.Checked = false;
+                                radioButton7.Checked = false;
+                                radioButton8.Checked = false;
+                              */
+
+                            }
+                            else
+                            {
+                                //MessageBox.Show("ATURADA");
+                                labelesq.Text = "";
+                                labeldreta.Text = "PORTER";
+                                parades = parades + 1;
+                                
+                                labelAturades.Text = "" + parades;
+
+                             /*   radioButton1.Checked = false;
+                                radioButton2.Checked = false;
+                                radioButton3.Checked = false;
+                                radioButton4.Checked = false;
+                                radioButton5.Checked = false;
+                                radioButton6.Checked = false;
+                                radioButton7.Checked = false;
+                                radioButton8.Checked = false;
+                             */
+                            }
+                        }
+                        else
+                        {
+                            labelesq.Text = "FINAL";
+                            labeldreta.Text = "PARTIDA";
+                            radioButton1.Visible = false;
+                            radioButton2.Visible = false;
+                            radioButton3.Visible = false;
+                            radioButton4.Visible = false;
+                            radioButton5.Visible = false;
+                            radioButton6.Visible = false;
+                            radioButton7.Visible = false;
+                            radioButton8.Visible = false;
+                        }
+                        
+                            
+
+                        break;
+
                         Array.Clear(trozos, 0, trozos.Length);
                 }
             }
@@ -283,7 +359,7 @@ namespace WindowsFormsApplication1
             buttonDesconectar.Visible = true;
             buttonConectar.Visible = false;
             groupBoxLogin.Visible = true;
-            
+                 
 
 
 
@@ -298,7 +374,7 @@ namespace WindowsFormsApplication1
             try
             {
                 server.Connect(ipep);//Intentamos conectar el socket
-                this.BackColor = Color.LimeGreen;
+                //this.BackColor = Color.CadetBlue;
                 MessageBox.Show("Connectat");
                 //pongo en marcha el thread que atenderá los mensajes del servidor
                 ThreadStart ts = delegate { AtenderServidor(); };
@@ -322,7 +398,7 @@ namespace WindowsFormsApplication1
             groupBoxLogin.Visible = false;
             groupBox_chat_partida.Visible = true;
             groupBox3.Visible = true;
-            groupBox_aceptarinvitacion.Visible = true;
+            //groupBox_aceptarinvitacion.Visible = true;
             //buttonConectar.Visible = false;
             //buttonDesconectar.Visible = false;
             //contLbl.Visible = false;
@@ -330,6 +406,7 @@ namespace WindowsFormsApplication1
             pictureBoxGameBase.Visible = true;
             pictureBoxLogo.Visible = true;
             label5.Visible = true;
+            gBMarcador.Visible = true;
 
             string mensaje = "1/" + user.Text + "/" + password.Text;
             // Enviamos al servidor el user y contraseña tecleados
@@ -397,6 +474,7 @@ namespace WindowsFormsApplication1
             groupBoxLogin.Visible = false;
             groupBox_chat_partida.Visible = false;
             groupBox3.Visible = false;
+            gBMarcador.Visible = false;
             groupBox_aceptarinvitacion.Visible = false;
             buttonConectar.Visible = true;
             buttonDesconectar.Visible = false;
@@ -409,6 +487,12 @@ namespace WindowsFormsApplication1
             radioButton2.Visible = false;
             radioButton3.Visible = false;
             radioButton4.Visible = false;
+            radioButton5.Visible = false;
+            radioButton6.Visible = false;
+            radioButton7.Visible = false;
+            radioButton8.Visible = false;
+            labelesq.Visible = false;
+            labeldreta.Visible = false;
 
 
 
@@ -461,7 +545,8 @@ namespace WindowsFormsApplication1
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
             groupBox_aceptarinvitacion.Visible = false;
-            
+            gBMarcador.Visible = true;
+
             // groupBox_Chat.Visible = true;
         }
 
@@ -494,21 +579,9 @@ namespace WindowsFormsApplication1
                     string mensaje = "30/x/dd";
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                     server.Send(msg);
-                
+            //radioButton1.Checked = false;
             
-           /* if (minombre == label5.Text)
-            {
-                string mensaje = "30/dd";
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-                server.Send(msg);
-            }
-
-            else
-            {
-                string mensaje = "31/dd";
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-                server.Send(msg);
-            }*/
+           
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
@@ -569,7 +642,10 @@ namespace WindowsFormsApplication1
             server.Send(msg);
 
         }
-
+        private void pictureBoxGameBase_Paint(object sender, PaintEventArgs e)
+        {
+            //ControlPaint.DrawBorder(e.Graphics, pictureBoxGameBase.ClientRectangle, Color.Red, ButtonBorderStyle.Solid);
+        }
         private void label1_Click(object sender, EventArgs e)
         {
 

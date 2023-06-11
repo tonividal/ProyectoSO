@@ -10,9 +10,10 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int contador;
-int port=9050;
+int port=9075;
 int sockets[100];
-
+char tiro[2];
+char parada[2];
 
 //Estructura de datos para almacenar 50 conectados
 typedef struct{
@@ -59,8 +60,10 @@ void *AtenderCliente (void *socket)
 	char resp[20];
 	char notifi[200];
 	char notifi2[200];
-	char tiro[2];
-	char parada[2];
+	
+	//char tiro[2];
+	//char parada[2];
+	
 //	char error[50];
 	char frase[100];
 	int sock_listen;
@@ -434,7 +437,7 @@ void *AtenderCliente (void *socket)
 			
 			else if (codigo == 30){ 
 				p = strtok (NULL, "/");
-				char rol[1];
+				char rol[2];
 				strcpy(rol, p);
 				
 				
@@ -454,19 +457,31 @@ void *AtenderCliente (void *socket)
 					strcpy(parada, p);
 				}	
 				
-				if(tiro!="" && parada!=""){
+				if( (strlen(tiro) > 0 && strlen(parada) > 0)){
 					
 					if(strcmp(tiro, parada)==0){
-					sprintf(respuesta, "30/Parada!");
+					sprintf(respuesta, "30/parada");
+					printf("Ha sido: %s\n" ,respuesta);
 					write (DameSocket(&milista, username), respuesta, sizeof(respuesta));
 					write (DameSocket(&milista, username2), respuesta, sizeof(respuesta));
-				}
+					
+					memset(tiro, '\0', sizeof(tiro));
+					memset(parada, '\0', sizeof(parada));
+					
+					}
 				
 					else{
-					sprintf(respuesta, "30/GOL!");
+					sprintf(respuesta, "30/gol");
+					printf("Ha sido: %s\n" ,respuesta);
 					write (DameSocket(&milista, username), respuesta, sizeof(respuesta));
 					write (DameSocket(&milista, username2), respuesta, sizeof(respuesta));
-				}
+					
+					memset(tiro, '\0', sizeof(tiro));
+					memset(parada, '\0', sizeof(parada));
+					}
+					
+					//tiro=="";
+					//parada=="";
 				}
 			}
 			
