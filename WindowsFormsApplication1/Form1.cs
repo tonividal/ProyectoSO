@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Media;
+using System.Drawing;
 
 
 namespace WindowsFormsApplication1
@@ -18,7 +20,7 @@ namespace WindowsFormsApplication1
     {
         Socket server;
         Thread atender;
-        int port = 9075;
+        int port = 9035;
         int color;
 
         int gols = 0;
@@ -34,16 +36,16 @@ namespace WindowsFormsApplication1
             CheckForIllegalCrossThreadCalls = false;
             
         }
-
+        SoundPlayer sonido;
         private void Form1_Load(object sender, EventArgs e)
         {
             groupBox1.Visible = false;
-            groupBoxLogin.Visible = false;
+            groupBoxLogin.Visible = true;
             groupBox_chat_partida.Visible = false;
             groupBox3.Visible = false;
             groupBox_aceptarinvitacion.Visible = false;
             gBMarcador.Visible = false;
-            buttonConectar.Visible = true;
+            buttonConectar.Visible = false;
             buttonDesconectar.Visible = false;
             label5.Visible = false;
             groupBox1_invitar.Visible = false;
@@ -58,17 +60,11 @@ namespace WindowsFormsApplication1
             radioButton6.Visible = false;
             radioButton7.Visible = false;
             radioButton8.Visible = false;
+            groupBoxMusica.Visible = false;
 
         }
 
-        public void CoMen(string mensaje)
-        {
-            //ChatdePartida.ClearSelection();
-
-            //ChatdePartida.Rows.Add(mensaje);
-        }
-
-
+      
         private void PonContador(string mensaje)
         {
             label5.Text = mensaje;
@@ -128,19 +124,7 @@ namespace WindowsFormsApplication1
 
                         break;
 
-                    /* case 6:    //lista de conectados
-                          string[] listaconectados = mensaje.Split('/');
-                         int numerodeconectados = Convert.ToInt32(listaconectados[0]);
-                         dataGridView1.ColumnCount = 1;
-                         dataGridView1.RowCount = numerodeconectados;
-
-                         for (int i = 1; i <= numerodeconectados; i++)
-                         {
-
-                             dataGridView1.Rows[i -1].Cells[0].Value = listaconectados[i];
-
-                         }
-                         break;*/
+                   
                     case 6:    //lista de conectados
                         DataTable dt = new DataTable();
                         dt.Columns.Add("Jugadors actius", typeof(string));
@@ -164,79 +148,39 @@ namespace WindowsFormsApplication1
                             ListaConectados.DataSource = dt;
                             ListaConectados.Refresh();
                         }));
-                        /* string[] listaconectados = mensaje.Split('/');
-                         int numerodeconectados = Convert.ToInt32(listaconectados[0]);
-                         
-
-                        if (dataGridView1.InvokeRequired)
-                         {
-                             dataGridView1.Invoke(new MethodInvoker(delegate
-                             {
-                                 dataGridView1.ColumnCount = 1;
-                             }));
-                         }
-                         else
-                         {
-                             dataGridView1.ColumnCount = 1;
-                         }
-
-                         dataGridView1.RowCount = numerodeconectados;
-
-
-
-                        for (int i = 0; i < numerodeconectados + 1 && i < listaconectados.Length; i++)
-                       {
-                           //dataGridView1.Rows.Add(2);
-                           dataGridView1.Rows[i].Cells[0].Value = listaconectados[i];
-
-                       }*/
+                        
                         break;
-
-
-
-                        /* case 7:     //Recibimos notificacion
-
-                             //Haz tu lo que no me dejas hacer a mi
-                             contLbl.Invoke(new Action(() =>
-                             {
-                                 contLbl.Text = mensaje;
-                             }));
-
-                             break;*/
-
-
                        
                     case 7: //Invitacion a partida
-                        //MessageBox.Show(Encoding.ASCII.GetString(msg2));
-                        //groupBox_invitacionPartida.Visible = true;
                         MessageBox.Show("Sol·licitud enviada");
                         minombre = mensaje.Split('-')[0];
                         sunombre = mensaje.Split('-')[1];
                         groupBox_aceptarinvitacion.Visible = true;
-                        label_invitacionPartida_name.Text = minombre + " et convida a una partida";
+                        label_invitacionPartida_name.Text = minombre + " et convida";
                         break;
 
                     case 8: //Respuesta invitacion a partida en el caso del host
-                            // MessageBox.Show(Encoding.ASCII.GetString(msg2));
-                       // MessageBox.Show("Sol·licitud enviada");
                         string el = mensaje.Split('-')[0];
                         string yo = mensaje.Split('-')[1];
                         string resp = mensaje.Split('-')[2];
-                        int idP = Convert.ToInt32(mensaje.Split('-')[3]);
+                       
                         this.color = 0;
                         MessageBox.Show(el + " ha dit: " + resp);
                         
                         string jert = "xutador";
                         if (resp == "SI" && jert == "xutador")
                         {
+                            int idP = Convert.ToInt32(mensaje.Split('-')[3]);
                             radioButton1.Visible = true;
                             radioButton2.Visible = true;
                             radioButton3.Visible = true;
                             radioButton4.Visible = true;
                             MessageBox.Show("Iniciant la partida, et toca xutar "  );
                             MessageBox.Show("El joc consta de 5 penals. " + "Si marques 3 gols guanyes.");
-
-
+                        }
+                        else
+                        {
+                            MessageBox.Show("Partida refusada");
                         }
                         
                         break;
@@ -249,7 +193,6 @@ namespace WindowsFormsApplication1
                     case 10:
                         int num = Convert.ToInt32(mensaje.Split('-')[0]);
                         string texto = mensaje.Split('-')[1];
-                       // pdas[num].CoMen(texto);
                         break;
 
                     case 11: //Respuesta de la invitacion en el caso de ser el invitado
@@ -277,6 +220,10 @@ namespace WindowsFormsApplication1
 
                         break;
 
+                    case 12:
+                        MessageBox.Show("Donat de baixa correctament");
+                        break;
+
                     case 15: //Mostrar mensajes del chat 
                         this.Invoke(new Action(() =>
                         {
@@ -285,49 +232,48 @@ namespace WindowsFormsApplication1
 
                         break;
 
-                    case 30:
+                    case 30: //juegp
                         
                         int total = gols + parades;
                         if (total!=5)
                         {
                             if (mensaje == "gol")
                             {
-                                //MessageBox.Show("GOL");
+                                try
+                                {
+                                    sonido = new SoundPlayer(Application.StartupPath + @"\Musica\gol-de-cerro-_mp3cut.net_.wav");
+                                    sonido.Play();
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("Error: " + ex);
+                                }
+                               
                                 labelesq.Text = "GOL";
                                 labeldreta.Text = " ";
                                 gols =( gols + 1);
                                
                                 labelGols.Text = "" + gols;
-
-                              /*  radioButton1.Checked = false;
-                                radioButton2.Checked = false;
-                                radioButton3.Checked = false;
-                                radioButton4.Checked = false;
-                                radioButton5.Checked = false;
-                                radioButton6.Checked = false;
-                                radioButton7.Checked = false;
-                                radioButton8.Checked = false;
-                              */
-
+                           
                             }
                             else
                             {
-                                //MessageBox.Show("ATURADA");
+                                
+                                try
+                                {
+                                    sonido = new SoundPlayer(Application.StartupPath + @"\Musica\arbitro-futbol-.wav");
+                                    sonido.Play();
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("Error: " + ex);
+                                }
                                 labelesq.Text = "";
                                 labeldreta.Text = "PORTER";
                                 parades = parades + 1;
                                 
                                 labelAturades.Text = "" + parades;
 
-                             /*   radioButton1.Checked = false;
-                                radioButton2.Checked = false;
-                                radioButton3.Checked = false;
-                                radioButton4.Checked = false;
-                                radioButton5.Checked = false;
-                                radioButton6.Checked = false;
-                                radioButton7.Checked = false;
-                                radioButton8.Checked = false;
-                             */
                             }
                         }
                         else
@@ -359,22 +305,24 @@ namespace WindowsFormsApplication1
             buttonDesconectar.Visible = true;
             buttonConectar.Visible = false;
             groupBoxLogin.Visible = true;
-                 
-
-
+        }
+        private void button5_Click(object sender, EventArgs e)
+        {
+            buttonDesconectar.Visible = true;
+            groupBoxMusica.Visible = true;
 
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("192.168.56.102");
             IPEndPoint ipep = new IPEndPoint(direc, port);
-            
+
 
             //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
                 server.Connect(ipep);//Intentamos conectar el socket
-                //this.BackColor = Color.CadetBlue;
+                this.BackColor = Color.CadetBlue;
                 MessageBox.Show("Connectat");
                 //pongo en marcha el thread que atenderá los mensajes del servidor
                 ThreadStart ts = delegate { AtenderServidor(); };
@@ -389,19 +337,13 @@ namespace WindowsFormsApplication1
                 return;
             }
 
-        }
-        private void button5_Click(object sender, EventArgs e)
-        {
+
+
             labelBEnvingut.Text = "Benvingut/da";
             labelBEnvingut.Visible = true;
-            groupBox1.Visible = true;
             groupBoxLogin.Visible = false;
             groupBox_chat_partida.Visible = true;
             groupBox3.Visible = true;
-            //groupBox_aceptarinvitacion.Visible = true;
-            //buttonConectar.Visible = false;
-            //buttonDesconectar.Visible = false;
-            //contLbl.Visible = false;
             groupBox1_invitar.Visible = true;
             pictureBoxGameBase.Visible = true;
             pictureBoxLogo.Visible = true;
@@ -412,21 +354,46 @@ namespace WindowsFormsApplication1
             // Enviamos al servidor el user y contraseña tecleados
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
+           
 
-            
 
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
+            //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
+            //al que deseamos conectarnos
+            IPAddress direc = IPAddress.Parse("192.168.56.102");
+            IPEndPoint ipep = new IPEndPoint(direc, port);
+
+
+            //Creamos el socket 
+            server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                server.Connect(ipep);//Intentamos conectar el socket
+                this.BackColor = Color.CadetBlue;
+                MessageBox.Show("Connectat");
+
+                //pongo en marcha el thread que atenderá los mensajes del servidor
+                ThreadStart ts = delegate { AtenderServidor(); };
+                atender = new Thread(ts);
+                atender.Start();
+
+            }
+            catch (SocketException ex)
+            {
+                //Si hay excepcion imprimimos error y salimos del programa con return 
+                MessageBox.Show("No s'ha pogut establir connexió amb el servidor");
+                return;
+            }
 
             string mensaje = "2/" + user.Text + "/" + password.Text;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
 
         }  
-
-    
+            
         private void button2_Click(object sender, EventArgs e)
         {
             if (partidas.Checked)
@@ -470,13 +437,14 @@ namespace WindowsFormsApplication1
 
         private void button3_Click(object sender, EventArgs e)
         {
+            password.Text = "";
             groupBox1.Visible = false;
-            groupBoxLogin.Visible = false;
+            groupBoxLogin.Visible = true;
             groupBox_chat_partida.Visible = false;
             groupBox3.Visible = false;
             gBMarcador.Visible = false;
             groupBox_aceptarinvitacion.Visible = false;
-            buttonConectar.Visible = true;
+            buttonConectar.Visible = false;
             buttonDesconectar.Visible = false;
             label5.Visible = false;
             groupBox1_invitar.Visible = false;
@@ -510,17 +478,7 @@ namespace WindowsFormsApplication1
 
 
         }
-        /*private void button6_Click(object sender, EventArgs e)
-        {
-            dataGridView1.Visible = true;
-
-            //enviamos mensaje al sevidor
-            string mensaje = "6/" + user.Text + "/" + password.Text;
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-            server.Send(msg);
-
-        }*/
-
+       
         private void Longitud_CheckedChanged(object sender, EventArgs e)
         {
 
@@ -528,7 +486,7 @@ namespace WindowsFormsApplication1
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //8/jugador
+           
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -547,7 +505,6 @@ namespace WindowsFormsApplication1
             groupBox_aceptarinvitacion.Visible = false;
             gBMarcador.Visible = true;
 
-            // groupBox_Chat.Visible = true;
         }
 
         private void groupBox1_invitar_Enter(object sender, EventArgs e)
@@ -567,7 +524,7 @@ namespace WindowsFormsApplication1
         {
             xat.AppendText("Tu: " + textBox_xat_partida.Text + Environment.NewLine);
             string mensaje = "15/" + label5.Text + "/" + textBox_xat_partida.Text;
-
+            textBox_xat_partida.Text = "";
 
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
@@ -579,7 +536,7 @@ namespace WindowsFormsApplication1
                     string mensaje = "30/x/dd";
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                     server.Send(msg);
-            //radioButton1.Checked = false;
+          
             
            
         }
@@ -646,11 +603,128 @@ namespace WindowsFormsApplication1
         {
             //ControlPaint.DrawBorder(e.Graphics, pictureBoxGameBase.ClientRectangle, Color.Red, ButtonBorderStyle.Solid);
         }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (sonido != null)
+            {
+                sonido.Stop();
+            }
+        }
+
         private void label1_Click(object sender, EventArgs e)
         {
 
         }
 
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                sonido = new SoundPlayer(Application.StartupPath + @"\Musica\Bakermat-Baianá-_Official-Video_.wav");
+                sonido.Play();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex);
+            }
+        }
+
+        private void groupBox_aceptarinvitacion_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
+            //al que deseamos conectarnos
+            IPAddress direc = IPAddress.Parse("192.168.56.102");
+            IPEndPoint ipep = new IPEndPoint(direc, port);
+
+
+            //Creamos el socket 
+            server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            try
+            {
+                server.Connect(ipep);//Intentamos conectar el socket
+                this.BackColor = Color.CadetBlue;
+                MessageBox.Show("Connectat");
+
+                //pongo en marcha el thread que atenderá los mensajes del servidor
+                ThreadStart ts = delegate { AtenderServidor(); };
+                atender = new Thread(ts);
+                atender.Start();
+
+            }
+            catch (SocketException ex)
+            {
+                //Si hay excepcion imprimimos error y salimos del programa con return 
+                MessageBox.Show("No s'ha pogut establir connexió amb el servidor");
+                return;
+            }
+
+            string mensaje = "12/" + user.Text + "/" + password.Text;
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+        }
+
+        private void buttonplay_Click(object sender, EventArgs e)
+        {
+            Random random = new Random();
+            int numeroAleatorio = random.Next(1, 5);
+            if (numeroAleatorio == 1)
+            {
+                try
+                {
+                    sonido = new SoundPlayer(Application.StartupPath + @"\Musica\RVFV_-Kikimoteleba-TIGINI-REMIX-_Video-Oficial_.wav");
+                    sonido.Play();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex);
+                }
+            }
+            else if (numeroAleatorio == 2)
+            {
+                try
+                {
+                    sonido = new SoundPlayer(Application.StartupPath + @"\Musica\ACDC-Thunderstruck.wav");
+                    sonido.Play();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex);
+                }
+            }
+            else if (numeroAleatorio == 3)
+            {
+                try
+                {
+                    sonido = new SoundPlayer(Application.StartupPath + @"\Musica\Bakermat-Baianá-_Official-Video_.wav");
+                    sonido.Play();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex);
+                }
+            }
+            else if (numeroAleatorio == 4)
+            {
+                try
+                {
+                    sonido = new SoundPlayer(Application.StartupPath + @"\Musica\Ed-Sheeran-Bad-Habits-_Official-Video_.wav");
+                    sonido.Play();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex);
+                }
+            }
+
+        }
+
+       
        
     }
 }

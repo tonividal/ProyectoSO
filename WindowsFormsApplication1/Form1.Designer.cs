@@ -78,6 +78,12 @@
             this.labelGols = new System.Windows.Forms.Label();
             this.labelesq = new System.Windows.Forms.Label();
             this.labeldreta = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.buttonplay = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.groupBoxMusica = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.button7 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBoxLogin.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -88,6 +94,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGameBase)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.gBMarcador.SuspendLayout();
+            this.groupBoxMusica.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -143,7 +150,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.nombre);
-            this.groupBox1.Location = new System.Drawing.Point(13, 249);
+            this.groupBox1.Location = new System.Drawing.Point(149, 695);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
@@ -209,19 +216,22 @@
             // 
             // buttonDesconectar
             // 
-            this.buttonDesconectar.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDesconectar.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.buttonDesconectar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDesconectar.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.buttonDesconectar.Location = new System.Drawing.Point(13, 12);
             this.buttonDesconectar.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDesconectar.Name = "buttonDesconectar";
-            this.buttonDesconectar.Size = new System.Drawing.Size(199, 39);
+            this.buttonDesconectar.Size = new System.Drawing.Size(152, 39);
             this.buttonDesconectar.TabIndex = 10;
             this.buttonDesconectar.Text = "desconnectar";
-            this.buttonDesconectar.UseVisualStyleBackColor = true;
+            this.buttonDesconectar.UseVisualStyleBackColor = false;
             this.buttonDesconectar.Click += new System.EventHandler(this.button3_Click);
             // 
             // groupBoxLogin
             // 
             this.groupBoxLogin.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.groupBoxLogin.Controls.Add(this.button7);
             this.groupBoxLogin.Controls.Add(this.button5);
             this.groupBoxLogin.Controls.Add(this.button4);
             this.groupBoxLogin.Controls.Add(this.label4);
@@ -229,9 +239,9 @@
             this.groupBoxLogin.Controls.Add(this.password);
             this.groupBoxLogin.Controls.Add(this.user);
             this.groupBoxLogin.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.groupBoxLogin.Location = new System.Drawing.Point(13, 74);
+            this.groupBoxLogin.Location = new System.Drawing.Point(13, 96);
             this.groupBoxLogin.Name = "groupBoxLogin";
-            this.groupBoxLogin.Size = new System.Drawing.Size(280, 150);
+            this.groupBoxLogin.Size = new System.Drawing.Size(295, 150);
             this.groupBoxLogin.TabIndex = 11;
             this.groupBoxLogin.TabStop = false;
             this.groupBoxLogin.Text = "Log in";
@@ -248,7 +258,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(88, 113);
+            this.button4.Location = new System.Drawing.Point(98, 113);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 4;
@@ -295,7 +305,7 @@
             // 
             this.groupBox3.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.groupBox3.Controls.Add(this.ListaConectados);
-            this.groupBox3.Location = new System.Drawing.Point(1220, 13);
+            this.groupBox3.Location = new System.Drawing.Point(1220, 74);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
@@ -322,7 +332,7 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label5.Location = new System.Drawing.Point(299, 125);
+            this.label5.Location = new System.Drawing.Point(299, 157);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(28, 24);
             this.label5.TabIndex = 13;
@@ -352,7 +362,7 @@
             this.groupBox1_invitar.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.groupBox1_invitar.Controls.Add(this.button6);
             this.groupBox1_invitar.Controls.Add(this.textBox1);
-            this.groupBox1_invitar.Location = new System.Drawing.Point(1253, 342);
+            this.groupBox1_invitar.Location = new System.Drawing.Point(1253, 425);
             this.groupBox1_invitar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1_invitar.Name = "groupBox1_invitar";
             this.groupBox1_invitar.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -368,7 +378,7 @@
             this.groupBox_aceptarinvitacion.Controls.Add(this.button2_invitacionPartida_NO);
             this.groupBox_aceptarinvitacion.Controls.Add(this.button_invitacionPartida_si);
             this.groupBox_aceptarinvitacion.Controls.Add(this.label_invitacionPartida_name);
-            this.groupBox_aceptarinvitacion.Location = new System.Drawing.Point(1253, 461);
+            this.groupBox_aceptarinvitacion.Location = new System.Drawing.Point(1253, 596);
             this.groupBox_aceptarinvitacion.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox_aceptarinvitacion.Name = "groupBox_aceptarinvitacion";
             this.groupBox_aceptarinvitacion.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -376,6 +386,7 @@
             this.groupBox_aceptarinvitacion.TabIndex = 15;
             this.groupBox_aceptarinvitacion.TabStop = false;
             this.groupBox_aceptarinvitacion.Text = "Invitació";
+            this.groupBox_aceptarinvitacion.Enter += new System.EventHandler(this.groupBox_aceptarinvitacion_Enter);
             // 
             // button2_invitacionPartida_NO
             // 
@@ -413,11 +424,11 @@
             this.groupBox_chat_partida.Controls.Add(this.xat);
             this.groupBox_chat_partida.Controls.Add(this.textBox_xat_partida);
             this.groupBox_chat_partida.Controls.Add(this.enviat_btn_partida);
-            this.groupBox_chat_partida.Location = new System.Drawing.Point(13, 484);
+            this.groupBox_chat_partida.Location = new System.Drawing.Point(13, 309);
             this.groupBox_chat_partida.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox_chat_partida.Name = "groupBox_chat_partida";
             this.groupBox_chat_partida.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox_chat_partida.Size = new System.Drawing.Size(294, 205);
+            this.groupBox_chat_partida.Size = new System.Drawing.Size(295, 205);
             this.groupBox_chat_partida.TabIndex = 17;
             this.groupBox_chat_partida.TabStop = false;
             this.groupBox_chat_partida.Text = "Xat";
@@ -453,7 +464,7 @@
             // pictureBoxGameBase
             // 
             this.pictureBoxGameBase.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxGameBase.Image")));
-            this.pictureBoxGameBase.Location = new System.Drawing.Point(514, 215);
+            this.pictureBoxGameBase.Location = new System.Drawing.Point(480, 211);
             this.pictureBoxGameBase.Name = "pictureBoxGameBase";
             this.pictureBoxGameBase.Size = new System.Drawing.Size(617, 435);
             this.pictureBoxGameBase.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -463,7 +474,7 @@
             // pictureBoxLogo
             // 
             this.pictureBoxLogo.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxLogo.Image")));
-            this.pictureBoxLogo.Location = new System.Drawing.Point(627, 13);
+            this.pictureBoxLogo.Location = new System.Drawing.Point(600, 13);
             this.pictureBoxLogo.Name = "pictureBoxLogo";
             this.pictureBoxLogo.Size = new System.Drawing.Size(388, 168);
             this.pictureBoxLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -475,7 +486,7 @@
             this.labelBEnvingut.AutoSize = true;
             this.labelBEnvingut.Font = new System.Drawing.Font("Wide Latin", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelBEnvingut.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.labelBEnvingut.Location = new System.Drawing.Point(26, 126);
+            this.labelBEnvingut.Location = new System.Drawing.Point(27, 158);
             this.labelBEnvingut.Name = "labelBEnvingut";
             this.labelBEnvingut.Size = new System.Drawing.Size(233, 23);
             this.labelBEnvingut.TabIndex = 20;
@@ -593,7 +604,7 @@
             this.gBMarcador.Controls.Add(this.labelAturades);
             this.gBMarcador.Controls.Add(this.labelGols);
             this.gBMarcador.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.gBMarcador.Location = new System.Drawing.Point(722, 675);
+            this.gBMarcador.Location = new System.Drawing.Point(701, 669);
             this.gBMarcador.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gBMarcador.Name = "gBMarcador";
             this.gBMarcador.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -635,7 +646,7 @@
             // labelesq
             // 
             this.labelesq.AutoSize = true;
-            this.labelesq.Location = new System.Drawing.Point(670, 724);
+            this.labelesq.Location = new System.Drawing.Point(651, 718);
             this.labelesq.Name = "labelesq";
             this.labelesq.Size = new System.Drawing.Size(0, 17);
             this.labelesq.TabIndex = 30;
@@ -643,21 +654,94 @@
             // labeldreta
             // 
             this.labeldreta.AutoSize = true;
-            this.labeldreta.Location = new System.Drawing.Point(904, 724);
+            this.labeldreta.Location = new System.Drawing.Point(897, 718);
             this.labeldreta.Name = "labeldreta";
             this.labeldreta.Size = new System.Drawing.Size(0, 17);
             this.labeldreta.TabIndex = 31;
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.button1.Font = new System.Drawing.Font("OpenSymbol", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(7, 32);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(81, 27);
+            this.button1.TabIndex = 33;
+            this.button1.Text = "STOP";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // buttonplay
+            // 
+            this.buttonplay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.buttonplay.Location = new System.Drawing.Point(189, 32);
+            this.buttonplay.Name = "buttonplay";
+            this.buttonplay.Size = new System.Drawing.Size(82, 27);
+            this.buttonplay.TabIndex = 21;
+            this.buttonplay.Text = "  ▶▶";
+            this.buttonplay.UseVisualStyleBackColor = false;
+            this.buttonplay.Click += new System.EventHandler(this.buttonplay_Click);
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.button3.Font = new System.Drawing.Font("OpenSymbol", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Location = new System.Drawing.Point(98, 32);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(82, 27);
+            this.button3.TabIndex = 34;
+            this.button3.Text = "PLAY";
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
+            // groupBoxMusica
+            // 
+            this.groupBoxMusica.BackColor = System.Drawing.Color.DarkSeaGreen;
+            this.groupBoxMusica.Controls.Add(this.label6);
+            this.groupBoxMusica.Controls.Add(this.buttonplay);
+            this.groupBoxMusica.Controls.Add(this.button3);
+            this.groupBoxMusica.Controls.Add(this.button1);
+            this.groupBoxMusica.Location = new System.Drawing.Point(13, 580);
+            this.groupBoxMusica.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBoxMusica.Name = "groupBoxMusica";
+            this.groupBoxMusica.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBoxMusica.Size = new System.Drawing.Size(295, 80);
+            this.groupBoxMusica.TabIndex = 35;
+            this.groupBoxMusica.TabStop = false;
+            this.groupBoxMusica.Text = "Música";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(15, 33);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(0, 17);
+            this.label6.TabIndex = 0;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(17, 113);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 6;
+            this.button7.Text = "Eliminar";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.BackColor = System.Drawing.Color.CadetBlue;
             this.ClientSize = new System.Drawing.Size(1493, 776);
+            this.Controls.Add(this.groupBoxMusica);
             this.Controls.Add(this.labeldreta);
             this.Controls.Add(this.labelesq);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gBMarcador);
             this.Controls.Add(this.radioButton8);
+            this.Controls.Add(this.labelBEnvingut);
             this.Controls.Add(this.radioButton7);
             this.Controls.Add(this.radioButton6);
             this.Controls.Add(this.label5);
@@ -666,7 +750,6 @@
             this.Controls.Add(this.radioButton3);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
-            this.Controls.Add(this.labelBEnvingut);
             this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.pictureBoxGameBase);
             this.Controls.Add(this.groupBox_chat_partida);
@@ -675,7 +758,6 @@
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBoxLogin);
             this.Controls.Add(this.buttonDesconectar);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonConectar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -700,6 +782,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.gBMarcador.ResumeLayout(false);
             this.gBMarcador.PerformLayout();
+            this.groupBoxMusica.ResumeLayout(false);
+            this.groupBoxMusica.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -756,6 +840,12 @@
         private System.Windows.Forms.Label labelGols;
         private System.Windows.Forms.Label labelesq;
         private System.Windows.Forms.Label labeldreta;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonplay;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.GroupBox groupBoxMusica;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button7;
     }
 }
 
